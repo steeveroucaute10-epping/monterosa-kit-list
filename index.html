@@ -109,11 +109,16 @@
 
         .item {
             display: grid;
-            grid-template-columns: 1fr 40px 40px;
+            grid-template-columns: 1fr 100px;
             align-items: center;
             padding: 15px;
             border-bottom: 1px solid var(--color-border);
             gap: 15px;
+        }
+
+        .item-details {
+            display: flex;
+            flex-direction: column;
         }
 
         .item-name {
@@ -121,7 +126,20 @@
             font-weight: 400;
         }
 
-        .checkbox, .purchase-checkbox {
+        .item-note {
+            font-size: 12px;
+            color: var(--color-text-light);
+            margin-top: 5px;
+        }
+
+        .toggle-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .checkbox {
             width: 24px;
             height: 24px;
             border: 2px solid var(--color-text-light);
@@ -130,45 +148,28 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            justify-self: center;
             position: relative;
         }
 
-        .checkbox-label, .purchase-checkbox-label {
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: var(--color-secondary);
-            color: white;
-            padding: 2px 5px;
-            border-radius: 4px;
+        .checkbox-label {
             font-size: 10px;
-            white-space: nowrap;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s, visibility 0.3s;
+            margin-top: 3px;
+            color: var(--color-text-light);
         }
 
-        .checkbox:hover .checkbox-label, 
-        .purchase-checkbox:hover .purchase-checkbox-label {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .checkbox.checked, .purchase-checkbox.checked {
+        .checkbox.checked {
             background-color: var(--color-accent);
             border-color: var(--color-accent);
         }
 
-        .checkbox.checked::after, .purchase-checkbox.checked::after {
+        .checkbox.checked::after {
             content: '✓';
             color: white;
             font-size: 14px;
         }
 
         @media (max-width: 375px) {
-            .item-name {
+            .item-name, .item-note {
                 font-size: 14px;
             }
         }
@@ -192,30 +193,86 @@
             {
                 name: "Key Clothing - Tops",
                 items: [
-                    "Hard-shell waterproof shell jacket (GORE‑TEX)",
-                    "Down or synthetic warm jacket",
-                    "Mid layers (fleece or similar)",
-                    "Base layer tops (long sleeve) x2",
-                    "Base layer tops (short sleeve) x2",
-                    "Cotton T-shirts"
+                    { 
+                        name: "Hard-shell waterproof shell jacket", 
+                        note: "GORE‑TEX or similar, with hood",
+                        recommended: "Jottnar 'Hodr', 'Grim' or 'Odin' hardshell"
+                    },
+                    { 
+                        name: "Down or synthetic warm jacket", 
+                        note: "Key insulating layer",
+                        recommended: "Jottnar 'Asger' or 'Floyen' jackets"
+                    },
+                    { 
+                        name: "Mid layers", 
+                        note: "Fleece or softshell",
+                        recommended: "Technical, comfortable layer"
+                    },
+                    { 
+                        name: "Base layer tops (long sleeve)", 
+                        note: "Lightweight, x2 recommended",
+                        recommended: "Jottnar 'Svend' or 'Tyer'"
+                    },
+                    { 
+                        name: "Base layer tops (short sleeve)", 
+                        note: "First layer of system, x2 recommended",
+                        recommended: "Look for anti-microbial treatment, Jottnar 'Ove' or 'Mar'"
+                    },
+                    { 
+                        name: "Cotton T-shirts", 
+                        note: "Optional, for town or rest days",
+                        recommended: "Lightweight and comfortable"
+                    }
                 ]
             },
             {
                 name: "Key Clothing - Bottoms",
                 items: [
-                    "Hard-shell waterproof shell pants (GORE‑TEX)",
-                    "Soft-shell mountaineering / trekking pants",
-                    "Base layer leggings",
-                    "Shorts",
-                    "Underwear"
+                    { 
+                        name: "Hard-shell waterproof shell pants", 
+                        note: "GORE‑TEX or similar, with side zips",
+                        recommended: "Jottnar 'Valdyr' works well"
+                    },
+                    { 
+                        name: "Soft-shell mountaineering / trekking pants", 
+                        note: "You'll spend most time in these",
+                        recommended: "Jottnar 'Valen' is ideal"
+                    },
+                    { 
+                        name: "Base layer leggings", 
+                        note: "Full leg, lightweight",
+                        recommended: "Keeps you warm"
+                    },
+                    { 
+                        name: "Shorts", 
+                        note: "Optional, for warm days or indoors",
+                        recommended: "Lightweight, quick-dry"
+                    },
+                    { 
+                        name: "Underwear", 
+                        note: "Comfortable, moisture-wicking",
+                        recommended: "Technical, breathable material"
+                    }
                 ]
             },
             {
                 name: "Footwear",
                 items: [
-                    "B2 or B3 graded mountaineering boots",
-                    "Warm socks (Merino wool)",
-                    "Trail shoes / hiking shoes"
+                    { 
+                        name: "Mountaineering Boots", 
+                        note: "B2 or B3 graded (B2 recommended for agility)",
+                        recommended: "Scarpa Ribelle works well"
+                    },
+                    { 
+                        name: "Warm Socks", 
+                        note: "Merino wool ideal",
+                        recommended: "Multiple pairs, moisture-wicking"
+                    },
+                    { 
+                        name: "Trail / Hiking Shoes", 
+                        note: "Optional, for lower mountain and town",
+                        recommended: "Comfortable, lightweight"
+                    }
                 ]
             }
         ];
@@ -244,12 +301,18 @@
                         const itemElement = document.createElement('div');
                         itemElement.className = 'item';
                         itemElement.innerHTML = `
-                            <div class="item-name">${item}</div>
-                            <div class="checkbox" data-category="${categoryIndex}" data-item="${itemIndex}">
-                                <span class="checkbox-label">Packed</span>
+                            <div class="item-details">
+                                <div class="item-name">${item.name}</div>
+                                <div class="item-note">${item.note}</div>
+                                <div class="item-note"><em>Recommended: ${item.recommended}</em></div>
                             </div>
-                            <div class="purchase-checkbox" data-category="${categoryIndex}" data-item="${itemIndex}">
-                                <span class="purchase-checkbox-label">To Buy</span>
+                            <div class="toggle-container">
+                                <div class="checkbox packed-checkbox" data-category="${categoryIndex}" data-item="${itemIndex}">
+                                    <span class="checkbox-label">Packed</span>
+                                </div>
+                                <div class="checkbox buy-checkbox" data-category="${categoryIndex}" data-item="${itemIndex}">
+                                    <span class="checkbox-label">To Buy</span>
+                                </div>
                             </div>
                         `;
                         categoryItems.appendChild(itemElement);
@@ -274,7 +337,7 @@
 
         function setupEventListeners() {
             try {
-                document.querySelectorAll('.checkbox, .purchase-checkbox').forEach(checkbox => {
+                document.querySelectorAll('.checkbox').forEach(checkbox => {
                     checkbox.addEventListener('click', (e) => {
                         checkbox.classList.toggle('checked');
                     });
@@ -284,7 +347,8 @@
                     const searchTerm = e.target.value.toLowerCase();
                     document.querySelectorAll('.item').forEach(item => {
                         const itemName = item.querySelector('.item-name').textContent.toLowerCase();
-                        item.style.display = itemName.includes(searchTerm) ? 'grid' : 'none';
+                        const itemNote = item.querySelector('.item-note').textContent.toLowerCase();
+                        item.style.display = (itemName.includes(searchTerm) || itemNote.includes(searchTerm)) ? 'grid' : 'none';
                     });
                 });
             } catch (listenerError) {
