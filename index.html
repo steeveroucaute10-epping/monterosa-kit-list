@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Monterosa Expedition Kit List</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        h1, h2 { color: #333; }
+        .category { margin-bottom: 20px; }
+        .item { display: flex; align-items: center; margin: 5px 0; }
+        .item input { margin-right: 10px; }
+        .item label { flex-grow: 1; }
+        .rental { color: #666; font-style: italic; }
+    </style>
+</head>
+<body>
+    <h1>Monterosa Expedition Kit List</h1>
+    
+    <div class="category">
+        <h2>Tops</h2>
+        <div class="item">
+            <input type="checkbox" id="hardshell-jacket">
+            <label for="hardshell-jacket">Hardshell Waterproof Jacket (GORE-TEX)</label>
+        </div>
+        <div class="item">
+            <input type="checkbox" id="down-jacket">
+            <label for="down-jacket">Down/Synthetic Warm Jacket</label>
+        </div>
+        <div class="item">
+            <input type="checkbox" id="mid-layer">
+            <label for="mid-layer">Mid Layer (Fleece/Softshell)</label>
+        </div>
+        <div class="item">
+            <input type="checkbox" id="base-long-sleeve">
+            <label for="base-long-sleeve">Base Layer - Long Sleeve (x2)</label>
+        </div>
+        <div class="item">
+            <input type="checkbox" id="base-short-sleeve">
+            <label for="base-short-sleeve">Base Layer - Short Sleeve (x2)</label>
+        </div>
+    </div>
+
+    <div class="category">
+        <h2>Bottoms</h2>
+        <div class="item">
+            <input type="checkbox" id="makalu-pants" checked>
+            <label for="makalu-pants">Mountain Equipment Makalu Hardshell Pants</label>
+        </div>
+        <div class="item">
+            <input type="checkbox" id="softshell-pants">
+            <label for="softshell-pants">Soft-shell Mountaineering Pants</label>
+        </div>
+        <div class="item">
+            <input type="checkbox" id="base-leggings">
+            <label for="base-leggings">Base Layer Leggings</label>
+        </div>
+    </div>
+
+    <div class="category">
+        <h2>Technical Climbing Equipment</h2>
+        <div class="item">
+            <input type="checkbox" id="backpack">
+            <label for="backpack">Backpack 30-40L (Osprey Mutant 38L) <span class="rental">(Optional)</span></label>
+        </div>
+        <div class="item">
+            <input type="checkbox" id="ice-axe">
+            <label for="ice-axe">Ice Axe (Black Diamond 'Raven') <span class="rental">(Can be rented)</span></label>
+        </div>
+        <div class="item">
+            <input type="checkbox" id="crampons">
+            <label for="crampons">Crampons (12-point steel, Black Diamond 'Serac') <span class="rental">(Can be rented)</span></label>
+        </div>
+        <div class="item">
+            <input type="checkbox" id="climbing-helmet">
+            <label for="climbing-helmet">Climbing Helmet (Black Diamond 'Vision') <span class="rental">(Can be rented)</span></label>
+        </div>
+        <div class="item">
+            <input type="checkbox" id="climbing-harness">
+            <label for="climbing-harness">Climbing Harness (Black Diamond 'Couloir') <span class="rental">(Can be rented)</span></label>
+        </div>
+        <div class="item">
+            <input type="checkbox" id="trekking-poles">
+            <label for="trekking-poles">Trekking Poles (Adjustable) <span class="rental">(Can be rented)</span></label>
+        </div>
+    </div>
+
+    <script>
+        // Optional: Add persistence to checkboxes
+        document.addEventListener('DOMContentLoaded', () => {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', () => {
+                    localStorage.setItem(checkbox.id, checkbox.checked);
+                });
+                
+                const savedState = localStorage.getItem(checkbox.id);
+                if (savedState !== null) {
+                    checkbox.checked = JSON.parse(savedState);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
