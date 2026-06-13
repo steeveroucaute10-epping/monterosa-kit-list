@@ -1,154 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monte Rosa Expedition Kit</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 20px;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-        .category {
-            margin-bottom: 20px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-        .category-header {
-            background-color: #f4f4f4;
-            padding: 10px;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-        }
-        .category-items {
-            display: none;
-            padding: 10px;
-        }
-        .category-items.active {
-            display: block;
-        }
-        .item {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px;
-            border-bottom: 1px solid #eee;
-        }
-        .item-actions {
-            display: flex;
-            gap: 10px;
-        }
-        .search {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 20px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-    </style>
+    <title>Monte Rosa Kit List</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
-    <h1>Monte Rosa Expedition Kit</h1>
+    <h1>Monte Rosa Expedition Kit List</h1>
     
-    <input type="text" id="search" class="search" placeholder="Search items...">
-    
-    <div id="kit-list"></div>
+    <div id="content">
+        <h2>Key Clothing - Tops</h2>
+        <ul>
+            <li>Hard-shell waterproof shell jacket (GORE‑TEX)</li>
+            <li>Down or synthetic warm jacket</li>
+            <li>Mid layers (fleece or similar)</li>
+            <li>Base layer tops (long sleeve) x2</li>
+            <li>Base layer tops (short sleeve) x2</li>
+            <li>Cotton T-shirts</li>
+        </ul>
+
+        <h2>Key Clothing - Bottoms</h2>
+        <ul>
+            <li>Hard-shell waterproof shell pants (GORE‑TEX)</li>
+            <li>Soft-shell mountaineering / trekking pants</li>
+            <li>Base layer leggings</li>
+            <li>Shorts</li>
+            <li>Underwear</li>
+        </ul>
+    </div>
 
     <script>
-        const kitList = [
-            {
-                category: "Key Clothing - Tops",
-                items: [
-                    "Hard-shell waterproof shell jacket (GORE‑TEX)",
-                    "Down or synthetic warm jacket",
-                    "Mid layers (fleece or similar)",
-                    "Base layer tops (long sleeve) x2",
-                    "Base layer tops (short sleeve) x2",
-                    "Cotton T-shirts"
-                ]
-            },
-            {
-                category: "Key Clothing - Bottoms",
-                items: [
-                    "Hard-shell waterproof shell pants (GORE‑TEX)",
-                    "Soft-shell mountaineering / trekking pants",
-                    "Base layer leggings",
-                    "Shorts",
-                    "Underwear"
-                ]
-            },
-            {
-                category: "Footwear",
-                items: [
-                    "B2 or B3 graded mountaineering boots",
-                    "Warm socks (Merino wool)",
-                    "Trail shoes / hiking shoes"
-                ]
-            }
-        ];
-
-        const kitListContainer = document.getElementById('kit-list');
-        const searchInput = document.getElementById('search');
-
-        function renderKitList() {
-            kitListContainer.innerHTML = '';
-            kitList.forEach((category, index) => {
-                const categoryDiv = document.createElement('div');
-                categoryDiv.className = 'category';
-
-                const headerDiv = document.createElement('div');
-                headerDiv.className = 'category-header';
-                headerDiv.innerHTML = `
-                    <h2>${category.category}</h2>
-                    <span>▼</span>
-                `;
-
-                const itemsDiv = document.createElement('div');
-                itemsDiv.className = 'category-items';
-
-                category.items.forEach(item => {
-                    const itemDiv = document.createElement('div');
-                    itemDiv.className = 'item';
-                    itemDiv.innerHTML = `
-                        <span>${item}</span>
-                        <div class="item-actions">
-                            <input type="checkbox" title="Packed">
-                            <input type="checkbox" title="To Buy">
-                        </div>
-                    `;
-                    itemsDiv.appendChild(itemDiv);
-                });
-
-                headerDiv.addEventListener('click', () => {
-                    itemsDiv.classList.toggle('active');
-                    const toggleSpan = headerDiv.querySelector('span');
-                    toggleSpan.textContent = itemsDiv.classList.contains('active') ? '▲' : '▼';
-                });
-
-                categoryDiv.appendChild(headerDiv);
-                categoryDiv.appendChild(itemsDiv);
-                kitListContainer.appendChild(categoryDiv);
-            });
-        }
-
-        searchInput.addEventListener('input', (e) => {
-            const searchTerm = e.target.value.toLowerCase();
-            const items = document.querySelectorAll('.item');
-            items.forEach(item => {
-                const itemText = item.textContent.toLowerCase();
-                item.style.display = itemText.includes(searchTerm) ? 'flex' : 'none';
-            });
-        });
-
-        renderKitList();
+        console.log('Page loaded successfully');
     </script>
 </body>
 </html>
