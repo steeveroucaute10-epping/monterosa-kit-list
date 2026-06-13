@@ -3,14 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monterosa Expedition Kit List</title>
+    <title>Monterosa Mountaineering Kit List</title>
     <style>
         :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #34495e;
-            --background-color: #ecf0f1;
+            --primary-color: #1a5f7a;
+            --secondary-color: #2c8eb3;
+            --background-color: #f4f7f6;
             --text-color: #333;
-            --accent-color: #3498db;
+            --accent-color: #e67e22;
+            --priority-high: #e74c3c;
+            --priority-medium: #f39c12;
+            --priority-low: #2ecc71;
         }
 
         * {
@@ -53,6 +56,24 @@
             color: white;
             padding: 10px 15px;
             font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .category-toggle {
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .category-content {
+            max-height: 1000px;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .category-content.collapsed {
+            max-height: 0;
         }
 
         .item {
@@ -61,10 +82,11 @@
             padding: 10px 15px;
             background-color: white;
             transition: background-color 0.3s ease;
+            border-bottom: 1px solid #f1f1f1;
         }
 
-        .item:hover {
-            background-color: #f9f9f9;
+        .item:last-child {
+            border-bottom: none;
         }
 
         .item-checkbox {
@@ -73,6 +95,25 @@
 
         .item-label {
             flex-grow: 1;
+        }
+
+        .priority-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .priority-high {
+            background-color: var(--priority-high);
+        }
+
+        .priority-medium {
+            background-color: var(--priority-medium);
+        }
+
+        .priority-low {
+            background-color: var(--priority-low);
         }
 
         .item-actions {
@@ -114,47 +155,6 @@
             transition: background-color 0.3s ease;
         }
 
-        #add-custom-item:hover {
-            background-color: #2980b9;
-        }
-
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .modal-content {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            width: 90%;
-            max-width: 500px;
-            max-height: 80%;
-            overflow-y: auto;
-        }
-
-        .modal-close {
-            float: right;
-            font-size: 24px;
-            cursor: pointer;
-            color: var(--secondary-color);
-        }
-
-        .recommendation {
-            margin-bottom: 15px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-
         @media (max-width: 600px) {
             .item {
                 flex-direction: column;
@@ -176,10 +176,9 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>Monterosa Expedition Kit List</h1>
+            <h1>Monterosa Mountaineering Kit List</h1>
         </div>
 
-        <!-- Categories will be dynamically populated here -->
         <div id="kit-list-categories"></div>
 
         <div class="custom-item-section">
@@ -191,39 +190,76 @@
         </div>
     </div>
 
-    <div id="recommendationsModal" class="modal">
-        <div class="modal-content">
-            <span class="modal-close">&times;</span>
-            <h2>Purchase Recommendations</h2>
-            <div id="recommendationsList"></div>
-        </div>
-    </div>
-
     <script>
-        // Kit list categories and items
         const kitListCategories = [
             {
-                name: "Tops",
+                name: "Essential Clothing Layers",
                 items: [
-                    "Hardshell Waterproof Jacket (GORE-TEX)",
-                    "Down/Synthetic Warm Jacket",
-                    "Mid Layer (Fleece/Softshell)",
-                    "Base Layer - Long Sleeve (x2)",
-                    "Base Layer - Short Sleeve (x2)",
-                    "Cotton T-shirts"
+                    { name: "Base Layer - Thermal Underwear (Top)", priority: "high" },
+                    { name: "Base Layer - Thermal Underwear (Bottom)", priority: "high" },
+                    { name: "Mid Layer - Fleece/Softshell", priority: "high" },
+                    { name: "Insulating Jacket (Down/Synthetic)", priority: "high" },
+                    { name: "Hardshell Waterproof Jacket (GORE-TEX)", priority: "high" },
+                    { name: "Hardshell Waterproof Pants", priority: "high" },
+                    { name: "Lightweight Insulating Vest", priority: "medium" }
                 ]
             },
             {
-                name: "Bottoms",
+                name: "Technical Mountaineering Gear",
                 items: [
-                    "Mountain Equipment Makalu Hardshell Pants",
-                    "Soft-shell Mountaineering / Trekking Pants",
-                    "Base Layer Leggings",
-                    "Shorts",
-                    "Underwear"
+                    { name: "Alpine Climbing Harness", priority: "high" },
+                    { name: "Climbing Helmet", priority: "high" },
+                    { name: "Ice Axe", priority: "high" },
+                    { name: "Crampons (12-point steel)", priority: "high" },
+                    { name: "Locking Carabiners (x2)", priority: "high" },
+                    { name: "Mountaineering Backpack (30-40L)", priority: "high" },
+                    { name: "Collapsible Trekking Poles", priority: "medium" }
                 ]
             },
-            // Add other categories similarly
+            {
+                name: "Personal Protection",
+                items: [
+                    { name: "Warm Hat", priority: "high" },
+                    { name: "Sun Hat", priority: "medium" },
+                    { name: "Sunglasses (Cat. 4 with Side Covers)", priority: "high" },
+                    { name: "Ski Goggles", priority: "medium" },
+                    { name: "Thin Softshell Gloves", priority: "high" },
+                    { name: "Thick Warm Expedition Gloves", priority: "high" },
+                    { name: "Sunscreen SPF 50+", priority: "high" },
+                    { name: "Lip Balm SPF 30+", priority: "high" }
+                ]
+            },
+            {
+                name: "Footwear and Accessories",
+                items: [
+                    { name: "B2/B3 Mountaineering Boots", priority: "high" },
+                    { name: "Merino Wool Socks (Multiple Pairs)", priority: "high" },
+                    { name: "Trail/Hiking Shoes", priority: "low" },
+                    { name: "Gaiters", priority: "medium" }
+                ]
+            },
+            {
+                name: "Safety and Emergency Equipment",
+                items: [
+                    { name: "First Aid Kit", priority: "high" },
+                    { name: "Emergency Shelter/Bivy Bag", priority: "high" },
+                    { name: "Headlamp with Spare Batteries", priority: "high" },
+                    { name: "Emergency Communication Device", priority: "high" },
+                    { name: "Whistle", priority: "medium" },
+                    { name: "Multi-tool", priority: "medium" }
+                ]
+            },
+            {
+                name: "Additional Accessories",
+                items: [
+                    { name: "Water Bottles (x2)", priority: "high" },
+                    { name: "Hydration System", priority: "medium" },
+                    { name: "Energy Bars/Gels", priority: "high" },
+                    { name: "Compact Camera", priority: "low" },
+                    { name: "Mobile Phone", priority: "medium" },
+                    { name: "Sleeping Bag Liner", priority: "medium" }
+                ]
+            }
         ];
 
         function renderKitList() {
@@ -236,27 +272,50 @@
                 
                 const categoryTitleElement = document.createElement('div');
                 categoryTitleElement.className = 'category-title';
-                categoryTitleElement.textContent = category.name;
+                
+                const titleTextElement = document.createElement('span');
+                titleTextElement.textContent = category.name;
+                
+                const toggleElement = document.createElement('span');
+                toggleElement.textContent = '▼';
+                toggleElement.className = 'category-toggle';
+                
+                categoryTitleElement.appendChild(titleTextElement);
+                categoryTitleElement.appendChild(toggleElement);
                 categoryElement.appendChild(categoryTitleElement);
 
-                category.items.forEach(itemName => {
-                    const itemElement = createItemElement(itemName);
-                    categoryElement.appendChild(itemElement);
+                const contentElement = document.createElement('div');
+                contentElement.className = 'category-content';
+
+                category.items.forEach(item => {
+                    const itemElement = createItemElement(item);
+                    contentElement.appendChild(itemElement);
                 });
 
+                categoryElement.appendChild(contentElement);
                 kitListContainer.appendChild(categoryElement);
+
+                // Toggle functionality
+                categoryTitleElement.addEventListener('click', () => {
+                    contentElement.classList.toggle('collapsed');
+                    toggleElement.textContent = contentElement.classList.contains('collapsed') ? '▶' : '▼';
+                });
             });
         }
 
-        function createItemElement(itemName) {
+        function createItemElement(itemData) {
             const itemElement = document.createElement('div');
             itemElement.className = 'item';
 
-            const checkboxId = itemName.toLowerCase().replace(/\s+/g, '-');
+            const checkboxId = itemData.name.toLowerCase().replace(/\s+/g, '-');
+
+            const priorityClass = `priority-${itemData.priority}`;
+            const priorityIndicator = `<div class="priority-indicator ${priorityClass}"></div>`;
 
             itemElement.innerHTML = `
+                ${priorityIndicator}
                 <input type="checkbox" id="${checkboxId}" class="item-checkbox">
-                <label for="${checkboxId}" class="item-label">${itemName}</label>
+                <label for="${checkboxId}" class="item-label">${itemData.name}</label>
                 <div class="item-actions">
                     <div class="purchase-toggle">
                         <input type="checkbox" id="${checkboxId}-purchase" class="purchase-check">
@@ -276,20 +335,40 @@
                 const kitListContainer = document.getElementById('kit-list-categories');
                 const customCategory = kitListContainer.querySelector('.category:last-child');
                 
-                if (!customCategory || customCategory.querySelector('.category-title').textContent !== 'Custom Items') {
+                if (!customCategory || customCategory.querySelector('.category-title span').textContent !== 'Custom Items') {
                     const newCustomCategory = document.createElement('div');
                     newCustomCategory.className = 'category';
                     
                     const categoryTitleElement = document.createElement('div');
                     categoryTitleElement.className = 'category-title';
-                    categoryTitleElement.textContent = 'Custom Items';
+                    
+                    const titleTextElement = document.createElement('span');
+                    titleTextElement.textContent = 'Custom Items';
+                    
+                    const toggleElement = document.createElement('span');
+                    toggleElement.textContent = '▼';
+                    toggleElement.className = 'category-toggle';
+                    
+                    categoryTitleElement.appendChild(titleTextElement);
+                    categoryTitleElement.appendChild(toggleElement);
                     newCustomCategory.appendChild(categoryTitleElement);
                     
+                    const contentElement = document.createElement('div');
+                    contentElement.className = 'category-content';
+                    newCustomCategory.appendChild(contentElement);
+                    
                     kitListContainer.appendChild(newCustomCategory);
+
+                    // Toggle functionality for custom category
+                    categoryTitleElement.addEventListener('click', () => {
+                        contentElement.classList.toggle('collapsed');
+                        toggleElement.textContent = contentElement.classList.contains('collapsed') ? '▶' : '▼';
+                    });
                 }
 
-                const itemElement = createItemElement(itemName);
-                kitListContainer.lastChild.appendChild(itemElement);
+                const customItemData = { name: itemName, priority: "low" };
+                const itemElement = createItemElement(customItemData);
+                kitListContainer.lastChild.querySelector('.category-content').appendChild(itemElement);
                 
                 customItemInput.value = '';
             }
