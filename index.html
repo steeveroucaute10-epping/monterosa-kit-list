@@ -39,7 +39,6 @@
         .container {
             max-width: 600px;
             margin: 0 auto;
-            padding: 0;
             background-color: var(--color-surface);
             min-height: 100vh;
             box-shadow: 0 0 20px rgba(0,0,0,0.1);
@@ -53,25 +52,64 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
         }
 
         .header h1 {
             font-size: 18px;
             font-weight: 600;
-            flex-grow: 1;
-            text-align: center;
+        }
+
+        .priority-legend {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            padding: 10px;
+            background-color: var(--color-background);
+        }
+
+        .priority-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: var(--color-text-light);
+        }
+
+        .priority-legend-item .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .priority-legend-item .legend-tooltip {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--color-secondary);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 10px;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+
+        .priority-legend-item:hover .legend-tooltip {
+            opacity: 1;
+            visibility: visible;
         }
 
         .search-container {
-            background-color: var(--color-surface);
             padding: 10px;
+            background-color: var(--color-surface);
             position: sticky;
             top: 50px;
             z-index: 99;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
 
         #search-input {
@@ -84,7 +122,6 @@
 
         .category {
             margin-bottom: 5px;
-            background-color: var(--color-surface);
         }
 
         .category-header {
@@ -95,7 +132,6 @@
             background-color: var(--color-background);
             cursor: pointer;
             user-select: none;
-            border-bottom: 1px solid var(--color-border);
         }
 
         .category-header h2 {
@@ -111,7 +147,6 @@
 
         .category-items {
             display: none;
-            background-color: var(--color-surface);
         }
 
         .category-items.active {
@@ -119,41 +154,50 @@
         }
 
         .item {
-            display: flex;
+            display: grid;
+            grid-template-columns: 20px 1fr 40px;
             align-items: center;
             padding: 15px;
             border-bottom: 1px solid var(--color-border);
-            position: relative;
-            transition: background-color 0.2s;
-        }
-
-        .item:active {
-            background-color: rgba(0,0,0,0.05);
+            gap: 15px;
         }
 
         .priority-indicator {
-            width: 10px;
-            height: 10px;
+            width: 20px;
+            height: 20px;
             border-radius: 50%;
-            margin-right: 15px;
+            position: relative;
+        }
+
+        .priority-indicator::after {
+            content: attr(data-priority);
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--color-secondary);
+            color: white;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-size: 10px;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+
+        .priority-indicator:hover::after {
+            opacity: 1;
+            visibility: visible;
         }
 
         .priority-high { background-color: var(--color-high-priority); }
         .priority-medium { background-color: var(--color-medium-priority); }
         .priority-low { background-color: var(--color-low-priority); }
 
-        .item-details {
-            flex-grow: 1;
-        }
-
         .item-name {
             font-size: 16px;
             font-weight: 400;
-        }
-
-        .item-actions {
-            display: flex;
-            align-items: center;
         }
 
         .checkbox {
@@ -161,11 +205,11 @@
             height: 24px;
             border: 2px solid var(--color-text-light);
             border-radius: 4px;
-            margin-right: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
+            justify-self: center;
         }
 
         .checkbox.checked {
@@ -211,17 +255,7 @@
             cursor: pointer;
         }
 
-        .empty-state {
-            text-align: center;
-            padding: 30px;
-            color: var(--color-text-light);
-        }
-
         @media (max-width: 375px) {
-            .header h1 {
-                font-size: 16px;
-            }
-
             .item-name {
                 font-size: 14px;
             }
@@ -232,6 +266,27 @@
     <div class="container">
         <div class="header">
             <h1>Monterosa Expedition Kit</h1>
+        </div>
+
+        <div class="priority-legend">
+            <div class="priority-legend-item">
+                <div class="legend-dot priority-high">
+                    <span class="legend-tooltip">Critical: Must-have for expedition safety</span>
+                </div>
+                <span>High Priority</span>
+            </div>
+            <div class="priority-legend-item">
+                <div class="legend-dot priority-medium">
+                    <span class="legend-tooltip">Important: Strongly recommended</span>
+                </div>
+                <span>Medium Priority</span>
+            </div>
+            <div class="priority-legend-item">
+                <div class="legend-dot priority-low">
+                    <span class="legend-tooltip">Optional: Nice to have</span>
+                </div>
+                <span>Low Priority</span>
+            </div>
         </div>
 
         <div class="search-container">
@@ -328,11 +383,9 @@
                     const itemElement = document.createElement('div');
                     itemElement.className = 'item';
                     itemElement.innerHTML = `
-                        <div class="priority-indicator priority-${item.priority}"></div>
+                        <div class="priority-indicator priority-${item.priority}" data-priority="${item.priority.charAt(0).toUpperCase() + item.priority.slice(1)} Priority"></div>
+                        <div class="item-name">${item.name}</div>
                         <div class="checkbox" data-category="${categoryIndex}" data-item="${itemIndex}"></div>
-                        <div class="item-details">
-                            <div class="item-name">${item.name}</div>
-                        </div>
                     `;
                     categoryItems.appendChild(itemElement);
                 });
@@ -364,7 +417,7 @@
                 const searchTerm = e.target.value.toLowerCase();
                 document.querySelectorAll('.item').forEach(item => {
                     const itemName = item.querySelector('.item-name').textContent.toLowerCase();
-                    item.style.display = itemName.includes(searchTerm) ? 'flex' : 'none';
+                    item.style.display = itemName.includes(searchTerm) ? 'grid' : 'none';
                 });
             });
 
