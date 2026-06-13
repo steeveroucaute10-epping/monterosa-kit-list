@@ -2,149 +2,153 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Monte Rosa Expedition Kit</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        /* [Previous CSS remains the same] */
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .category {
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .category-header {
+            background-color: #f4f4f4;
+            padding: 10px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+        }
+        .category-items {
+            display: none;
+            padding: 10px;
+        }
+        .category-items.active {
+            display: block;
+        }
+        .item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .item-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .search {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>Monte Rosa Expedition Kit</h1>
-        </div>
-
-        <div class="search-container">
-            <input type="search" id="search-input" placeholder="Search gear items...">
-        </div>
-
-        <div id="kit-list-categories"></div>
-
-        <div class="add-item-section">
-            <div class="add-item-input">
-                <input type="text" id="custom-item-input" placeholder="Add custom item">
-                <button id="add-custom-item">Add</button>
-            </div>
-        </div>
-    </div>
+    <h1>Monte Rosa Expedition Kit</h1>
+    
+    <input type="text" id="search" class="search" placeholder="Search items...">
+    
+    <div id="kit-list"></div>
 
     <script>
-        const kitListCategories = [
+        const kitList = [
             {
-                name: "Key Clothing - Tops",
+                category: "Key Clothing - Tops",
                 items: [
-                    { name: "Hard-shell waterproof shell jacket (GORE‑TEX)", type: "essential" },
-                    { name: "Down or synthetic warm jacket", type: "essential" },
-                    { name: "Mid layers (fleece or similar)", type: "essential" },
-                    { name: "Base layer tops (long sleeve) x2", type: "essential" },
-                    { name: "Base layer tops (short sleeve) x2", type: "essential" },
-                    { name: "Cotton T-shirts", type: "optional" }
+                    "Hard-shell waterproof shell jacket (GORE‑TEX)",
+                    "Down or synthetic warm jacket",
+                    "Mid layers (fleece or similar)",
+                    "Base layer tops (long sleeve) x2",
+                    "Base layer tops (short sleeve) x2",
+                    "Cotton T-shirts"
                 ]
             },
             {
-                name: "Key Clothing - Bottoms",
+                category: "Key Clothing - Bottoms",
                 items: [
-                    { name: "Hard-shell waterproof shell pants (GORE‑TEX)", type: "essential" },
-                    { name: "Soft-shell mountaineering / trekking pants", type: "essential" },
-                    { name: "Base layer leggings", type: "essential" },
-                    { name: "Shorts", type: "optional" },
-                    { name: "Underwear", type: "essential" }
+                    "Hard-shell waterproof shell pants (GORE‑TEX)",
+                    "Soft-shell mountaineering / trekking pants",
+                    "Base layer leggings",
+                    "Shorts",
+                    "Underwear"
                 ]
             },
             {
-                name: "Footwear",
+                category: "Footwear",
                 items: [
-                    { name: "B2 or B3 graded mountaineering boots", type: "essential", note: "Recommended: Scarpa Ribelle" },
-                    { name: "Warm socks (Merino wool)", type: "essential" },
-                    { name: "Trail shoes / hiking shoes", type: "optional", note: "Comfortable for lower mountain and town" }
-                ]
-            },
-            {
-                name: "Head Gear",
-                items: [
-                    { name: "Warm hat (covers ears)", type: "essential" },
-                    { name: "Sun hat", type: "optional" },
-                    { name: "Buff or Balaclava", type: "essential", note: "For full face coverage" },
-                    { name: "Sunglasses (Cat. 4 with side shields)", type: "essential", note: "VALLON Heron Glacier recommended" },
-                    { name: "Ski Goggles", type: "essential", note: "VALLON Freebirds™ recommended" },
-                    { name: "Sunscreen SPF 50+", type: "essential" },
-                    { name: "Lip balm SPF 30+", type: "essential" }
-                ]
-            },
-            {
-                name: "Hand Gear",
-                items: [
-                    { name: "Thin softshell gloves", type: "essential", note: "For cooler temperatures and glacier" },
-                    { name: "Thick warm gloves", type: "essential", note: "Gore-Tex expedition shell with removable inner glove" }
-                ]
-            },
-            {
-                name: "Climbing Accessories",
-                items: [
-                    { 
-                        name: "Mountaineering backpack (30–40L)", 
-                        type: "essential", 
-                        note: "Recommended: Osprey Mutant 38 Litre" 
-                    },
-                    { 
-                        name: "Ice axe", 
-                        type: "essential", 
-                        note: "Can be rented. Recommended: Black Diamond 'Raven' Ice Axe" 
-                    },
-                    { 
-                        name: "Crampons", 
-                        type: "essential", 
-                        note: "12-point steel with anti-balling plates. Can be rented. Recommended: Black Diamond 'Serac' crampons" 
-                    },
-                    { 
-                        name: "Climbing helmet", 
-                        type: "essential", 
-                        note: "Can be rented. Recommended: Black Diamond 'Vision' Helmet" 
-                    },
-                    { 
-                        name: "Alpine climbing harness", 
-                        type: "essential", 
-                        note: "Can be rented. Recommended: Black Diamond 'Couloir' harness" 
-                    },
-                    { name: "Locking carabiners × 2", type: "essential" },
-                    { 
-                        name: "Collapsible trekking poles", 
-                        type: "optional", 
-                        note: "Can be rented. Helpful for ascending and descending" 
-                    }
-                ]
-            },
-            {
-                name: "Travel Items",
-                items: [
-                    { name: "Copy of passport and insurance policy", type: "essential" },
-                    { name: "Travel clothes", type: "essential" },
-                    { name: "Credit card / cash for personal expenses", type: "essential" }
-                ]
-            },
-            {
-                name: "Gear / Extras",
-                items: [
-                    { name: "Water bottles × 2", type: "essential" },
-                    { name: "Toiletries", type: "essential" },
-                    { name: "Earplugs", type: "optional" }
-                ]
-            },
-            {
-                name: "Accessories / Other",
-                items: [
-                    { name: "Headlamp plus spare batteries", type: "essential" },
-                    { name: "First aid kit and relevant medication", type: "essential" },
-                    { name: "Camera", type: "optional" },
-                    { name: "Mobile phone", type: "essential" },
-                    { name: "Sleeping bag liner", type: "essential" },
-                    { name: "Snacks (bars, gels, dried fruit)", type: "essential" }
+                    "B2 or B3 graded mountaineering boots",
+                    "Warm socks (Merino wool)",
+                    "Trail shoes / hiking shoes"
                 ]
             }
         ];
 
-        // [Previous JavaScript remains the same]
+        const kitListContainer = document.getElementById('kit-list');
+        const searchInput = document.getElementById('search');
+
+        function renderKitList() {
+            kitListContainer.innerHTML = '';
+            kitList.forEach((category, index) => {
+                const categoryDiv = document.createElement('div');
+                categoryDiv.className = 'category';
+
+                const headerDiv = document.createElement('div');
+                headerDiv.className = 'category-header';
+                headerDiv.innerHTML = `
+                    <h2>${category.category}</h2>
+                    <span>▼</span>
+                `;
+
+                const itemsDiv = document.createElement('div');
+                itemsDiv.className = 'category-items';
+
+                category.items.forEach(item => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'item';
+                    itemDiv.innerHTML = `
+                        <span>${item}</span>
+                        <div class="item-actions">
+                            <input type="checkbox" title="Packed">
+                            <input type="checkbox" title="To Buy">
+                        </div>
+                    `;
+                    itemsDiv.appendChild(itemDiv);
+                });
+
+                headerDiv.addEventListener('click', () => {
+                    itemsDiv.classList.toggle('active');
+                    const toggleSpan = headerDiv.querySelector('span');
+                    toggleSpan.textContent = itemsDiv.classList.contains('active') ? '▲' : '▼';
+                });
+
+                categoryDiv.appendChild(headerDiv);
+                categoryDiv.appendChild(itemsDiv);
+                kitListContainer.appendChild(categoryDiv);
+            });
+        }
+
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const items = document.querySelectorAll('.item');
+            items.forEach(item => {
+                const itemText = item.textContent.toLowerCase();
+                item.style.display = itemText.includes(searchTerm) ? 'flex' : 'none';
+            });
+        });
+
+        renderKitList();
     </script>
 </body>
 </html>
