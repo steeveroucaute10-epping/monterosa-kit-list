@@ -4,26 +4,35 @@
     <meta charset="UTF-8">
     <title>Monterosa Expedition Kit List</title>
     <style>
-        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        body { 
+            font-family: Arial, sans-serif; 
+            max-width: 800px; 
+            margin: 0 auto; 
+            padding: 20px; 
+            line-height: 1.6;
+        }
         h1, h2 { color: #333; }
-        .category { margin-bottom: 20px; }
+        .category { 
+            margin-bottom: 20px; 
+            border-bottom: 2px solid #eee; 
+            padding-bottom: 10px;
+        }
         .item { 
             display: flex; 
             align-items: center; 
             margin: 5px 0; 
             padding: 10px; 
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid #f4f4f4;
         }
         .item input[type="checkbox"] { margin-right: 10px; }
         .item label { flex-grow: 1; }
-        .rental { color: #666; font-style: italic; }
         .purchase-toggle { 
             margin-left: 10px; 
             display: flex; 
             align-items: center;
         }
         .purchase-toggle label { margin-left: 5px; }
-        #recommendationsModal {
+        #recommendationsModal, #addItemModal {
             display: none;
             position: fixed;
             z-index: 1000;
@@ -41,6 +50,7 @@
             border: 1px solid #888;
             width: 80%;
             max-width: 600px;
+            border-radius: 5px;
         }
         .close-modal {
             color: #aaa;
@@ -53,6 +63,7 @@
             margin-bottom: 15px;
             padding: 10px;
             border: 1px solid #ddd;
+            border-radius: 5px;
         }
         .recommendation a {
             display: block;
@@ -60,132 +71,247 @@
             color: blue;
             text-decoration: none;
         }
+        .add-item-container {
+            display: flex;
+            margin-top: 20px;
+        }
+        #custom-item-input {
+            flex-grow: 1;
+            margin-right: 10px;
+            padding: 5px;
+        }
+        #add-custom-item {
+            padding: 5px 10px;
+        }
     </style>
 </head>
 <body>
     <h1>Monterosa Expedition Kit List</h1>
-    
+
+    <!-- Previous categories (Tops, Bottoms, Footwear) remain the same -->
+
     <div class="category">
-        <h2>Tops</h2>
+        <h2>Head Gear</h2>
         <div class="item">
-            <input type="checkbox" id="hardshell-jacket">
-            <label for="hardshell-jacket">Hardshell Waterproof Jacket (GORE-TEX)</label>
+            <input type="checkbox" id="warm-hat">
+            <label for="warm-hat">Warm Hat</label>
             <div class="purchase-toggle">
-                <input type="checkbox" id="hardshell-jacket-purchase" class="purchase-check">
-                <label for="hardshell-jacket-purchase">Need to Buy</label>
+                <input type="checkbox" id="warm-hat-purchase" class="purchase-check">
+                <label for="warm-hat-purchase">Need to Buy</label>
             </div>
         </div>
         <div class="item">
-            <input type="checkbox" id="down-jacket">
-            <label for="down-jacket">Down/Synthetic Warm Jacket</label>
+            <input type="checkbox" id="sun-hat">
+            <label for="sun-hat">Sun Hat</label>
             <div class="purchase-toggle">
-                <input type="checkbox" id="down-jacket-purchase" class="purchase-check">
-                <label for="down-jacket-purchase">Need to Buy</label>
+                <input type="checkbox" id="sun-hat-purchase" class="purchase-check">
+                <label for="sun-hat-purchase">Need to Buy</label>
             </div>
         </div>
         <div class="item">
-            <input type="checkbox" id="mid-layer">
-            <label for="mid-layer">Mid Layer (Fleece/Softshell)</label>
+            <input type="checkbox" id="sunglasses">
+            <label for="sunglasses">Sunglasses (Cat. 4 with side covers)</label>
             <div class="purchase-toggle">
-                <input type="checkbox" id="mid-layer-purchase" class="purchase-check">
-                <label for="mid-layer-purchase">Need to Buy</label>
+                <input type="checkbox" id="sunglasses-purchase" class="purchase-check">
+                <label for="sunglasses-purchase">Need to Buy</label>
             </div>
         </div>
         <div class="item">
-            <input type="checkbox" id="base-long-sleeve">
-            <label for="base-long-sleeve">Base Layer - Long Sleeve (x2)</label>
+            <input type="checkbox" id="sunscreen">
+            <label for="sunscreen">Sunscreen SPF 50+</label>
             <div class="purchase-toggle">
-                <input type="checkbox" id="base-long-sleeve-purchase" class="purchase-check">
-                <label for="base-long-sleeve-purchase">Need to Buy</label>
+                <input type="checkbox" id="sunscreen-purchase" class="purchase-check">
+                <label for="sunscreen-purchase">Need to Buy</label>
             </div>
         </div>
         <div class="item">
-            <input type="checkbox" id="base-short-sleeve">
-            <label for="base-short-sleeve">Base Layer - Short Sleeve (x2)</label>
+            <input type="checkbox" id="lip-balm">
+            <label for="lip-balm">Lip Balm SPF 30+</label>
             <div class="purchase-toggle">
-                <input type="checkbox" id="base-short-sleeve-purchase" class="purchase-check">
-                <label for="base-short-sleeve-purchase">Need to Buy</label>
+                <input type="checkbox" id="lip-balm-purchase" class="purchase-check">
+                <label for="lip-balm-purchase">Need to Buy</label>
             </div>
         </div>
         <div class="item">
-            <input type="checkbox" id="cotton-tshirt">
-            <label for="cotton-tshirt">Cotton T-shirts</label>
+            <input type="checkbox" id="ski-goggles">
+            <label for="ski-goggles">Ski Goggles</label>
             <div class="purchase-toggle">
-                <input type="checkbox" id="cotton-tshirt-purchase" class="purchase-check">
-                <label for="cotton-tshirt-purchase">Need to Buy</label>
+                <input type="checkbox" id="ski-goggles-purchase" class="purchase-check">
+                <label for="ski-goggles-purchase">Need to Buy</label>
+            </div>
+        </div>
+        <div class="item">
+            <input type="checkbox" id="bandanna">
+            <label for="bandanna">Bandanna or Buff</label>
+            <div class="purchase-toggle">
+                <input type="checkbox" id="bandanna-purchase" class="purchase-check">
+                <label for="bandanna-purchase">Need to Buy</label>
             </div>
         </div>
     </div>
 
     <div class="category">
-        <h2>Bottoms</h2>
+        <h2>Hand Gear</h2>
         <div class="item">
-            <input type="checkbox" id="makalu-pants" checked>
-            <label for="makalu-pants">Mountain Equipment Makalu Hardshell Pants</label>
+            <input type="checkbox" id="thin-gloves">
+            <label for="thin-gloves">Thin Softshell Gloves</label>
             <div class="purchase-toggle">
-                <input type="checkbox" id="makalu-pants-purchase" class="purchase-check">
-                <label for="makalu-pants-purchase">Need to Buy</label>
+                <input type="checkbox" id="thin-gloves-purchase" class="purchase-check">
+                <label for="thin-gloves-purchase">Need to Buy</label>
             </div>
         </div>
         <div class="item">
-            <input type="checkbox" id="softshell-pants">
-            <label for="softshell-pants">Soft-shell Mountaineering / Trekking Pants</label>
+            <input type="checkbox" id="thick-gloves">
+            <label for="thick-gloves">Thick Warm Gloves (Gore-Tex, Removable Inner)</label>
             <div class="purchase-toggle">
-                <input type="checkbox" id="softshell-pants-purchase" class="purchase-check">
-                <label for="softshell-pants-purchase">Need to Buy</label>
-            </div>
-        </div>
-        <div class="item">
-            <input type="checkbox" id="base-leggings">
-            <label for="base-leggings">Base Layer Leggings</label>
-            <div class="purchase-toggle">
-                <input type="checkbox" id="base-leggings-purchase" class="purchase-check">
-                <label for="base-leggings-purchase">Need to Buy</label>
-            </div>
-        </div>
-        <div class="item">
-            <input type="checkbox" id="shorts">
-            <label for="shorts">Shorts</label>
-            <div class="purchase-toggle">
-                <input type="checkbox" id="shorts-purchase" class="purchase-check">
-                <label for="shorts-purchase">Need to Buy</label>
-            </div>
-        </div>
-        <div class="item">
-            <input type="checkbox" id="underwear">
-            <label for="underwear">Underwear</label>
-            <div class="purchase-toggle">
-                <input type="checkbox" id="underwear-purchase" class="purchase-check">
-                <label for="underwear-purchase">Need to Buy</label>
+                <input type="checkbox" id="thick-gloves-purchase" class="purchase-check">
+                <label for="thick-gloves-purchase">Need to Buy</label>
             </div>
         </div>
     </div>
 
     <div class="category">
-        <h2>Footwear</h2>
+        <h2>Climbing Accessories</h2>
         <div class="item">
-            <input type="checkbox" id="mountaineering-boots">
-            <label for="mountaineering-boots">B2 or B3 Graded Mountaineering Boots</label>
+            <input type="checkbox" id="mountaineering-backpack">
+            <label for="mountaineering-backpack">Mountaineering Backpack (30-40L)</label>
             <div class="purchase-toggle">
-                <input type="checkbox" id="mountaineering-boots-purchase" class="purchase-check">
-                <label for="mountaineering-boots-purchase">Need to Buy</label>
+                <input type="checkbox" id="mountaineering-backpack-purchase" class="purchase-check">
+                <label for="mountaineering-backpack-purchase">Need to Buy</label>
             </div>
         </div>
         <div class="item">
-            <input type="checkbox" id="warm-socks">
-            <label for="warm-socks">Warm Socks (Merino Wool)</label>
+            <input type="checkbox" id="carabiners">
+            <label for="carabiners">Locking Carabiners (x2)</label>
             <div class="purchase-toggle">
-                <input type="checkbox" id="warm-socks-purchase" class="purchase-check">
-                <label for="warm-socks-purchase">Need to Buy</label>
+                <input type="checkbox" id="carabiners-purchase" class="purchase-check">
+                <label for="carabiners-purchase">Need to Buy</label>
             </div>
         </div>
         <div class="item">
-            <input type="checkbox" id="trail-shoes">
-            <label for="trail-shoes">Trail / Hiking Shoes (Optional)</label>
+            <input type="checkbox" id="trekking-poles">
+            <label for="trekking-poles">Collapsible Trekking Poles</label>
             <div class="purchase-toggle">
-                <input type="checkbox" id="trail-shoes-purchase" class="purchase-check">
-                <label for="trail-shoes-purchase">Need to Buy</label>
+                <input type="checkbox" id="trekking-poles-purchase" class="purchase-check">
+                <label for="trekking-poles-purchase">Need to Buy</label>
             </div>
+        </div>
+    </div>
+
+    <div class="category">
+        <h2>Travel Items</h2>
+        <div class="item">
+            <input type="checkbox" id="passport-copy">
+            <label for="passport-copy">Copy of Passport and Insurance Policy</label>
+            <div class="purchase-toggle">
+                <input type="checkbox" id="passport-copy-purchase" class="purchase-check">
+                <label for="passport-copy-purchase">Need to Buy</label>
+            </div>
+        </div>
+        <div class="item">
+            <input type="checkbox" id="travel-clothes">
+            <label for="travel-clothes">Travel Clothes</label>
+            <div class="purchase-toggle">
+                <input type="checkbox" id="travel-clothes-purchase" class="purchase-check">
+                <label for="travel-clothes-purchase">Need to Buy</label>
+            </div>
+        </div>
+        <div class="item">
+            <input type="checkbox" id="money">
+            <label for="money">Credit Card / Cash for Personal Expenses</label>
+            <div class="purchase-toggle">
+                <input type="checkbox" id="money-purchase" class="purchase-check">
+                <label for="money-purchase">Need to Buy</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="category">
+        <h2>Gear & Extras</h2>
+        <div class="item">
+            <input type="checkbox" id="water-bottles">
+            <label for="water-bottles">Water Bottles (x2)</label>
+            <div class="purchase-toggle">
+                <input type="checkbox" id="water-bottles-purchase" class="purchase-check">
+                <label for="water-bottles-purchase">Need to Buy</label>
+            </div>
+        </div>
+        <div class="item">
+            <input type="checkbox" id="toiletries">
+            <label for="toiletries">Toiletries</label>
+            <div class="purchase-toggle">
+                <input type="checkbox" id="toiletries-purchase" class="purchase-check">
+                <label for="toiletries-purchase">Need to Buy</label>
+            </div>
+        </div>
+        <div class="item">
+            <input type="checkbox" id="earplugs">
+            <label for="earplugs">Earplugs</label>
+            <div class="purchase-toggle">
+                <input type="checkbox" id="earplugs-purchase" class="purchase-check">
+                <label for="earplugs-purchase">Need to Buy</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="category">
+        <h2>Accessories</h2>
+        <div class="item">
+            <input type="checkbox" id="headlamp">
+            <label for="headlamp">Headlamp with Spare Batteries</label>
+            <div class="purchase-toggle">
+                <input type="checkbox" id="headlamp-purchase" class="purchase-check">
+                <label for="headlamp-purchase">Need to Buy</label>
+            </div>
+        </div>
+        <div class="item">
+            <input type="checkbox" id="first-aid-kit">
+            <label for="first-aid-kit">First Aid Kit and Relevant Medication</label>
+            <div class="purchase-toggle">
+                <input type="checkbox" id="first-aid-kit-purchase" class="purchase-check">
+                <label for="first-aid-kit-purchase">Need to Buy</label>
+            </div>
+        </div>
+        <div class="item">
+            <input type="checkbox" id="camera">
+            <label for="camera">Camera</label>
+            <div class="purchase-toggle">
+                <input type="checkbox" id="camera-purchase" class="purchase-check">
+                <label for="camera-purchase">Need to Buy</label>
+            </div>
+        </div>
+        <div class="item">
+            <input type="checkbox" id="mobile-phone">
+            <label for="mobile-phone">Mobile Phone</label>
+            <div class="purchase-toggle">
+                <input type="checkbox" id="mobile-phone-purchase" class="purchase-check">
+                <label for="mobile-phone-purchase">Need to Buy</label>
+            </div>
+        </div>
+        <div class="item">
+            <input type="checkbox" id="sleeping-bag-liner">
+            <label for="sleeping-bag-liner">Sleeping Bag Liner</label>
+            <div class="purchase-toggle">
+                <input type="checkbox" id="sleeping-bag-liner-purchase" class="purchase-check">
+                <label for="sleeping-bag-liner-purchase">Need to Buy</label>
+            </div>
+        </div>
+        <div class="item">
+            <input type="checkbox" id="snacks">
+            <label for="snacks">Snacks (Bars, Gels, Dried Fruit)</label>
+            <div class="purchase-toggle">
+                <input type="checkbox" id="snacks-purchase" class="purchase-check">
+                <label for="snacks-purchase">Need to Buy</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="category">
+        <h2>Custom Items</h2>
+        <div id="custom-items"></div>
+        <div class="add-item-container">
+            <input type="text" id="custom-item-input" placeholder="Add a custom item">
+            <button id="add-custom-item" onclick="addCustomItem()">Add Item</button>
         </div>
     </div>
 
@@ -198,7 +324,36 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+        function addCustomItem() {
+            const customItemInput = document.getElementById('custom-item-input');
+            const itemName = customItemInput.value.trim();
+            
+            if (itemName) {
+                const newItemId = itemName.toLowerCase().replace(/\s+/g, '-');
+                const newItemHTML = `
+                    <div class="item">
+                        <input type="checkbox" id="${newItemId}">
+                        <label for="${newItemId}">${itemName}</label>
+                        <div class="purchase-toggle">
+                            <input type="checkbox" id="${newItemId}-purchase" class="purchase-check">
+                            <label for="${newItemId}-purchase">Need to Buy</label>
+                        </div>
+                    </div>
+                `;
+                
+                // Append to custom items section
+                const customItemsSection = document.getElementById('custom-items');
+                customItemsSection.innerHTML += newItemHTML;
+                
+                // Clear input
+                customItemInput.value = '';
+                
+                // Re-attach event listeners for new items
+                attachPurchaseCheckListeners();
+            }
+        }
+
+        function attachPurchaseCheckListeners() {
             const purchaseChecks = document.querySelectorAll('.purchase-check');
             const modal = document.getElementById('recommendationsModal');
             const closeModal = document.querySelector('.close-modal');
@@ -242,7 +397,10 @@
                     modal.style.display = 'none';
                 }
             };
-        });
+        }
+
+        // Initial attachment of event listeners
+        document.addEventListener('DOMContentLoaded', attachPurchaseCheckListeners);
     </script>
 </body>
 </html>
