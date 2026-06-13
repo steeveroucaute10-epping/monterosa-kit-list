@@ -2,405 +2,301 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Monterosa Expedition Kit List</title>
     <style>
-        body { 
-            font-family: Arial, sans-serif; 
-            max-width: 800px; 
-            margin: 0 auto; 
-            padding: 20px; 
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #34495e;
+            --background-color: #ecf0f1;
+            --text-color: #333;
+            --accent-color: #3498db;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
             line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--background-color);
+            padding: 10px;
         }
-        h1, h2 { color: #333; }
-        .category { 
-            margin-bottom: 20px; 
-            border-bottom: 2px solid #eee; 
-            padding-bottom: 10px;
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
         }
-        .item { 
-            display: flex; 
-            align-items: center; 
-            margin: 5px 0; 
-            padding: 10px; 
-            border-bottom: 1px solid #f4f4f4;
+
+        .header {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 15px;
         }
-        .item input[type="checkbox"] { margin-right: 10px; }
-        .item label { flex-grow: 1; }
-        .purchase-toggle { 
-            margin-left: 10px; 
-            display: flex; 
+
+        .category {
+            margin-bottom: 10px;
+            border-bottom: 1px solid var(--background-color);
+        }
+
+        .category-title {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 10px 15px;
+            font-weight: bold;
+        }
+
+        .item {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            background-color: white;
+            transition: background-color 0.3s ease;
+        }
+
+        .item:hover {
+            background-color: #f9f9f9;
+        }
+
+        .item-checkbox {
+            margin-right: 15px;
+        }
+
+        .item-label {
+            flex-grow: 1;
+        }
+
+        .item-actions {
+            display: flex;
             align-items: center;
         }
-        .purchase-toggle label { margin-left: 5px; }
-        #recommendationsModal, #addItemModal {
-            display: none;
+
+        .purchase-toggle {
+            display: flex;
+            align-items: center;
+            margin-left: 10px;
+        }
+
+        .custom-item-section {
+            padding: 15px;
+            background-color: var(--background-color);
+        }
+
+        .custom-item-input {
+            display: flex;
+            margin-top: 10px;
+        }
+
+        #custom-item-input {
+            flex-grow: 1;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+
+        #add-custom-item {
+            padding: 8px 15px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #add-custom-item:hover {
+            background-color: #2980b9;
+        }
+
+        .modal {
             position: fixed;
-            z-index: 1000;
-            left: 0;
             top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.4);
+            background-color: rgba(0,0,0,0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
         }
+
         .modal-content {
-            background-color: #fefefe;
-            margin: 15% auto;
+            background-color: white;
             padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-            max-width: 600px;
-            border-radius: 5px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80%;
+            overflow-y: auto;
         }
-        .close-modal {
-            color: #aaa;
+
+        .modal-close {
             float: right;
-            font-size: 28px;
-            font-weight: bold;
+            font-size: 24px;
             cursor: pointer;
+            color: var(--secondary-color);
         }
+
         .recommendation {
             margin-bottom: 15px;
             padding: 10px;
             border: 1px solid #ddd;
-            border-radius: 5px;
+            border-radius: 4px;
         }
-        .recommendation a {
-            display: block;
-            margin-top: 10px;
-            color: blue;
-            text-decoration: none;
-        }
-        .add-item-container {
-            display: flex;
-            margin-top: 20px;
-        }
-        #custom-item-input {
-            flex-grow: 1;
-            margin-right: 10px;
-            padding: 5px;
-        }
-        #add-custom-item {
-            padding: 5px 10px;
+
+        @media (max-width: 600px) {
+            .item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .item-actions {
+                width: 100%;
+                justify-content: space-between;
+                margin-top: 10px;
+            }
+
+            .purchase-toggle {
+                margin-left: 0;
+            }
         }
     </style>
 </head>
 <body>
-    <h1>Monterosa Expedition Kit List</h1>
+    <div class="container">
+        <div class="header">
+            <h1>Monterosa Expedition Kit List</h1>
+        </div>
 
-    <!-- Previous categories (Tops, Bottoms, Footwear) remain the same -->
+        <!-- Categories will be dynamically populated here -->
+        <div id="kit-list-categories"></div>
 
-    <div class="category">
-        <h2>Head Gear</h2>
-        <div class="item">
-            <input type="checkbox" id="warm-hat">
-            <label for="warm-hat">Warm Hat</label>
-            <div class="purchase-toggle">
-                <input type="checkbox" id="warm-hat-purchase" class="purchase-check">
-                <label for="warm-hat-purchase">Need to Buy</label>
+        <div class="custom-item-section">
+            <h2>Add Custom Item</h2>
+            <div class="custom-item-input">
+                <input type="text" id="custom-item-input" placeholder="Enter a new item">
+                <button id="add-custom-item" onclick="addCustomItem()">Add Item</button>
             </div>
-        </div>
-        <div class="item">
-            <input type="checkbox" id="sun-hat">
-            <label for="sun-hat">Sun Hat</label>
-            <div class="purchase-toggle">
-                <input type="checkbox" id="sun-hat-purchase" class="purchase-check">
-                <label for="sun-hat-purchase">Need to Buy</label>
-            </div>
-        </div>
-        <div class="item">
-            <input type="checkbox" id="sunglasses">
-            <label for="sunglasses">Sunglasses (Cat. 4 with side covers)</label>
-            <div class="purchase-toggle">
-                <input type="checkbox" id="sunglasses-purchase" class="purchase-check">
-                <label for="sunglasses-purchase">Need to Buy</label>
-            </div>
-        </div>
-        <div class="item">
-            <input type="checkbox" id="sunscreen">
-            <label for="sunscreen">Sunscreen SPF 50+</label>
-            <div class="purchase-toggle">
-                <input type="checkbox" id="sunscreen-purchase" class="purchase-check">
-                <label for="sunscreen-purchase">Need to Buy</label>
-            </div>
-        </div>
-        <div class="item">
-            <input type="checkbox" id="lip-balm">
-            <label for="lip-balm">Lip Balm SPF 30+</label>
-            <div class="purchase-toggle">
-                <input type="checkbox" id="lip-balm-purchase" class="purchase-check">
-                <label for="lip-balm-purchase">Need to Buy</label>
-            </div>
-        </div>
-        <div class="item">
-            <input type="checkbox" id="ski-goggles">
-            <label for="ski-goggles">Ski Goggles</label>
-            <div class="purchase-toggle">
-                <input type="checkbox" id="ski-goggles-purchase" class="purchase-check">
-                <label for="ski-goggles-purchase">Need to Buy</label>
-            </div>
-        </div>
-        <div class="item">
-            <input type="checkbox" id="bandanna">
-            <label for="bandanna">Bandanna or Buff</label>
-            <div class="purchase-toggle">
-                <input type="checkbox" id="bandanna-purchase" class="purchase-check">
-                <label for="bandanna-purchase">Need to Buy</label>
-            </div>
-        </div>
-    </div>
-
-    <div class="category">
-        <h2>Hand Gear</h2>
-        <div class="item">
-            <input type="checkbox" id="thin-gloves">
-            <label for="thin-gloves">Thin Softshell Gloves</label>
-            <div class="purchase-toggle">
-                <input type="checkbox" id="thin-gloves-purchase" class="purchase-check">
-                <label for="thin-gloves-purchase">Need to Buy</label>
-            </div>
-        </div>
-        <div class="item">
-            <input type="checkbox" id="thick-gloves">
-            <label for="thick-gloves">Thick Warm Gloves (Gore-Tex, Removable Inner)</label>
-            <div class="purchase-toggle">
-                <input type="checkbox" id="thick-gloves-purchase" class="purchase-check">
-                <label for="thick-gloves-purchase">Need to Buy</label>
-            </div>
-        </div>
-    </div>
-
-    <div class="category">
-        <h2>Climbing Accessories</h2>
-        <div class="item">
-            <input type="checkbox" id="mountaineering-backpack">
-            <label for="mountaineering-backpack">Mountaineering Backpack (30-40L)</label>
-            <div class="purchase-toggle">
-                <input type="checkbox" id="mountaineering-backpack-purchase" class="purchase-check">
-                <label for="mountaineering-backpack-purchase">Need to Buy</label>
-            </div>
-        </div>
-        <div class="item">
-            <input type="checkbox" id="carabiners">
-            <label for="carabiners">Locking Carabiners (x2)</label>
-            <div class="purchase-toggle">
-                <input type="checkbox" id="carabiners-purchase" class="purchase-check">
-                <label for="carabiners-purchase">Need to Buy</label>
-            </div>
-        </div>
-        <div class="item">
-            <input type="checkbox" id="trekking-poles">
-            <label for="trekking-poles">Collapsible Trekking Poles</label>
-            <div class="purchase-toggle">
-                <input type="checkbox" id="trekking-poles-purchase" class="purchase-check">
-                <label for="trekking-poles-purchase">Need to Buy</label>
-            </div>
-        </div>
-    </div>
-
-    <div class="category">
-        <h2>Travel Items</h2>
-        <div class="item">
-            <input type="checkbox" id="passport-copy">
-            <label for="passport-copy">Copy of Passport and Insurance Policy</label>
-            <div class="purchase-toggle">
-                <input type="checkbox" id="passport-copy-purchase" class="purchase-check">
-                <label for="passport-copy-purchase">Need to Buy</label>
-            </div>
-        </div>
-        <div class="item">
-            <input type="checkbox" id="travel-clothes">
-            <label for="travel-clothes">Travel Clothes</label>
-            <div class="purchase-toggle">
-                <input type="checkbox" id="travel-clothes-purchase" class="purchase-check">
-                <label for="travel-clothes-purchase">Need to Buy</label>
-            </div>
-        </div>
-        <div class="item">
-            <input type="checkbox" id="money">
-            <label for="money">Credit Card / Cash for Personal Expenses</label>
-            <div class="purchase-toggle">
-                <input type="checkbox" id="money-purchase" class="purchase-check">
-                <label for="money-purchase">Need to Buy</label>
-            </div>
-        </div>
-    </div>
-
-    <div class="category">
-        <h2>Gear & Extras</h2>
-        <div class="item">
-            <input type="checkbox" id="water-bottles">
-            <label for="water-bottles">Water Bottles (x2)</label>
-            <div class="purchase-toggle">
-                <input type="checkbox" id="water-bottles-purchase" class="purchase-check">
-                <label for="water-bottles-purchase">Need to Buy</label>
-            </div>
-        </div>
-        <div class="item">
-            <input type="checkbox" id="toiletries">
-            <label for="toiletries">Toiletries</label>
-            <div class="purchase-toggle">
-                <input type="checkbox" id="toiletries-purchase" class="purchase-check">
-                <label for="toiletries-purchase">Need to Buy</label>
-            </div>
-        </div>
-        <div class="item">
-            <input type="checkbox" id="earplugs">
-            <label for="earplugs">Earplugs</label>
-            <div class="purchase-toggle">
-                <input type="checkbox" id="earplugs-purchase" class="purchase-check">
-                <label for="earplugs-purchase">Need to Buy</label>
-            </div>
-        </div>
-    </div>
-
-    <div class="category">
-        <h2>Accessories</h2>
-        <div class="item">
-            <input type="checkbox" id="headlamp">
-            <label for="headlamp">Headlamp with Spare Batteries</label>
-            <div class="purchase-toggle">
-                <input type="checkbox" id="headlamp-purchase" class="purchase-check">
-                <label for="headlamp-purchase">Need to Buy</label>
-            </div>
-        </div>
-        <div class="item">
-            <input type="checkbox" id="first-aid-kit">
-            <label for="first-aid-kit">First Aid Kit and Relevant Medication</label>
-            <div class="purchase-toggle">
-                <input type="checkbox" id="first-aid-kit-purchase" class="purchase-check">
-                <label for="first-aid-kit-purchase">Need to Buy</label>
-            </div>
-        </div>
-        <div class="item">
-            <input type="checkbox" id="camera">
-            <label for="camera">Camera</label>
-            <div class="purchase-toggle">
-                <input type="checkbox" id="camera-purchase" class="purchase-check">
-                <label for="camera-purchase">Need to Buy</label>
-            </div>
-        </div>
-        <div class="item">
-            <input type="checkbox" id="mobile-phone">
-            <label for="mobile-phone">Mobile Phone</label>
-            <div class="purchase-toggle">
-                <input type="checkbox" id="mobile-phone-purchase" class="purchase-check">
-                <label for="mobile-phone-purchase">Need to Buy</label>
-            </div>
-        </div>
-        <div class="item">
-            <input type="checkbox" id="sleeping-bag-liner">
-            <label for="sleeping-bag-liner">Sleeping Bag Liner</label>
-            <div class="purchase-toggle">
-                <input type="checkbox" id="sleeping-bag-liner-purchase" class="purchase-check">
-                <label for="sleeping-bag-liner-purchase">Need to Buy</label>
-            </div>
-        </div>
-        <div class="item">
-            <input type="checkbox" id="snacks">
-            <label for="snacks">Snacks (Bars, Gels, Dried Fruit)</label>
-            <div class="purchase-toggle">
-                <input type="checkbox" id="snacks-purchase" class="purchase-check">
-                <label for="snacks-purchase">Need to Buy</label>
-            </div>
-        </div>
-    </div>
-
-    <div class="category">
-        <h2>Custom Items</h2>
-        <div id="custom-items"></div>
-        <div class="add-item-container">
-            <input type="text" id="custom-item-input" placeholder="Add a custom item">
-            <button id="add-custom-item" onclick="addCustomItem()">Add Item</button>
         </div>
     </div>
 
     <div id="recommendationsModal" class="modal">
         <div class="modal-content">
-            <span class="close-modal">&times;</span>
+            <span class="modal-close">&times;</span>
             <h2>Purchase Recommendations</h2>
             <div id="recommendationsList"></div>
         </div>
     </div>
 
     <script>
+        // Kit list categories and items
+        const kitListCategories = [
+            {
+                name: "Tops",
+                items: [
+                    "Hardshell Waterproof Jacket (GORE-TEX)",
+                    "Down/Synthetic Warm Jacket",
+                    "Mid Layer (Fleece/Softshell)",
+                    "Base Layer - Long Sleeve (x2)",
+                    "Base Layer - Short Sleeve (x2)",
+                    "Cotton T-shirts"
+                ]
+            },
+            {
+                name: "Bottoms",
+                items: [
+                    "Mountain Equipment Makalu Hardshell Pants",
+                    "Soft-shell Mountaineering / Trekking Pants",
+                    "Base Layer Leggings",
+                    "Shorts",
+                    "Underwear"
+                ]
+            },
+            // Add other categories similarly
+        ];
+
+        function renderKitList() {
+            const kitListContainer = document.getElementById('kit-list-categories');
+            kitListContainer.innerHTML = '';
+
+            kitListCategories.forEach(category => {
+                const categoryElement = document.createElement('div');
+                categoryElement.className = 'category';
+                
+                const categoryTitleElement = document.createElement('div');
+                categoryTitleElement.className = 'category-title';
+                categoryTitleElement.textContent = category.name;
+                categoryElement.appendChild(categoryTitleElement);
+
+                category.items.forEach(itemName => {
+                    const itemElement = createItemElement(itemName);
+                    categoryElement.appendChild(itemElement);
+                });
+
+                kitListContainer.appendChild(categoryElement);
+            });
+        }
+
+        function createItemElement(itemName) {
+            const itemElement = document.createElement('div');
+            itemElement.className = 'item';
+
+            const checkboxId = itemName.toLowerCase().replace(/\s+/g, '-');
+
+            itemElement.innerHTML = `
+                <input type="checkbox" id="${checkboxId}" class="item-checkbox">
+                <label for="${checkboxId}" class="item-label">${itemName}</label>
+                <div class="item-actions">
+                    <div class="purchase-toggle">
+                        <input type="checkbox" id="${checkboxId}-purchase" class="purchase-check">
+                        <label for="${checkboxId}-purchase">Need to Buy</label>
+                    </div>
+                </div>
+            `;
+
+            return itemElement;
+        }
+
         function addCustomItem() {
             const customItemInput = document.getElementById('custom-item-input');
             const itemName = customItemInput.value.trim();
             
             if (itemName) {
-                const newItemId = itemName.toLowerCase().replace(/\s+/g, '-');
-                const newItemHTML = `
-                    <div class="item">
-                        <input type="checkbox" id="${newItemId}">
-                        <label for="${newItemId}">${itemName}</label>
-                        <div class="purchase-toggle">
-                            <input type="checkbox" id="${newItemId}-purchase" class="purchase-check">
-                            <label for="${newItemId}-purchase">Need to Buy</label>
-                        </div>
-                    </div>
-                `;
+                const kitListContainer = document.getElementById('kit-list-categories');
+                const customCategory = kitListContainer.querySelector('.category:last-child');
                 
-                // Append to custom items section
-                const customItemsSection = document.getElementById('custom-items');
-                customItemsSection.innerHTML += newItemHTML;
+                if (!customCategory || customCategory.querySelector('.category-title').textContent !== 'Custom Items') {
+                    const newCustomCategory = document.createElement('div');
+                    newCustomCategory.className = 'category';
+                    
+                    const categoryTitleElement = document.createElement('div');
+                    categoryTitleElement.className = 'category-title';
+                    categoryTitleElement.textContent = 'Custom Items';
+                    newCustomCategory.appendChild(categoryTitleElement);
+                    
+                    kitListContainer.appendChild(newCustomCategory);
+                }
+
+                const itemElement = createItemElement(itemName);
+                kitListContainer.lastChild.appendChild(itemElement);
                 
-                // Clear input
                 customItemInput.value = '';
-                
-                // Re-attach event listeners for new items
-                attachPurchaseCheckListeners();
             }
         }
 
-        function attachPurchaseCheckListeners() {
-            const purchaseChecks = document.querySelectorAll('.purchase-check');
-            const modal = document.getElementById('recommendationsModal');
-            const closeModal = document.querySelector('.close-modal');
-            const recommendationsList = document.getElementById('recommendationsList');
-
-            purchaseChecks.forEach(checkbox => {
-                checkbox.addEventListener('change', async (e) => {
-                    if (e.target.checked) {
-                        const itemName = e.target.id.replace('-purchase', '');
-                        const itemLabel = document.querySelector(`label[for="${itemName}"]`).textContent;
-                        
-                        // Clear previous recommendations
-                        recommendationsList.innerHTML = 'Loading recommendations...';
-                        modal.style.display = 'block';
-
-                        try {
-                            const response = await fetch(`/search?query=${encodeURIComponent(itemLabel)}`);
-                            const recommendations = await response.json();
-
-                            recommendationsList.innerHTML = recommendations.map(rec => `
-                                <div class="recommendation">
-                                    <h3>${rec.title}</h3>
-                                    <p>${rec.description}</p>
-                                    <p>Price: ${rec.price}</p>
-                                    <a href="${rec.link}" target="_blank">View Product</a>
-                                </div>
-                            `).join('');
-                        } catch (error) {
-                            recommendationsList.innerHTML = 'Error loading recommendations.';
-                        }
-                    }
-                });
-            });
-
-            closeModal.onclick = () => {
-                modal.style.display = 'none';
-            };
-
-            window.onclick = (event) => {
-                if (event.target == modal) {
-                    modal.style.display = 'none';
-                }
-            };
-        }
-
-        // Initial attachment of event listeners
-        document.addEventListener('DOMContentLoaded', attachPurchaseCheckListeners);
+        // Initial render
+        renderKitList();
     </script>
 </body>
 </html>
