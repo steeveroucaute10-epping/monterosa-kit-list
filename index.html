@@ -2,118 +2,153 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monterosa Mountaineering Kit List</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Monterosa Expedition Kit</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #1a5f7a;
-            --secondary-color: #2c8eb3;
-            --background-color: #f4f7f6;
-            --text-color: #333;
-            --accent-color: #e67e22;
-            --priority-high: #e74c3c;
-            --priority-medium: #f39c12;
-            --priority-low: #2ecc71;
+            --color-background: #f4f6f9;
+            --color-surface: #ffffff;
+            --color-primary: #2c3e50;
+            --color-secondary: #34495e;
+            --color-accent: #3498db;
+            --color-text: #2c3e50;
+            --color-text-light: #7f8c8d;
+            --color-border: #ecf0f1;
+            --color-high-priority: #e74c3c;
+            --color-medium-priority: #f39c12;
+            --color-low-priority: #2ecc71;
         }
 
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--color-background);
+            color: var(--color-text);
             line-height: 1.6;
-            color: var(--text-color);
-            background-color: var(--background-color);
-            padding: 10px;
+            overscroll-behavior-y: none;
+            touch-action: manipulation;
         }
 
         .container {
-            max-width: 800px;
+            max-width: 600px;
             margin: 0 auto;
-            background-color: white;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            border-radius: 8px;
-            overflow: hidden;
+            padding: 0;
+            background-color: var(--color-surface);
+            min-height: 100vh;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
         }
 
         .header {
-            background-color: var(--primary-color);
+            background-color: var(--color-primary);
             color: white;
-            text-align: center;
             padding: 15px;
-        }
-
-        .category {
-            margin-bottom: 10px;
-            border-bottom: 1px solid var(--background-color);
-        }
-
-        .category-title {
-            background-color: var(--secondary-color);
-            color: white;
-            padding: 10px 15px;
-            font-weight: bold;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .category-toggle {
+        .header h1 {
+            font-size: 18px;
+            font-weight: 600;
+            flex-grow: 1;
+            text-align: center;
+        }
+
+        .search-container {
+            background-color: var(--color-surface);
+            padding: 10px;
+            position: sticky;
+            top: 50px;
+            z-index: 99;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        #search-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .category {
+            margin-bottom: 5px;
+            background-color: var(--color-surface);
+        }
+
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background-color: var(--color-background);
             cursor: pointer;
             user-select: none;
+            border-bottom: 1px solid var(--color-border);
         }
 
-        .category-content {
-            max-height: 1000px;
-            overflow: hidden;
-            transition: max-height 0.3s ease;
+        .category-header h2 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--color-secondary);
         }
 
-        .category-content.collapsed {
-            max-height: 0;
+        .category-header .toggle {
+            font-size: 20px;
+            color: var(--color-text-light);
+        }
+
+        .category-items {
+            display: none;
+            background-color: var(--color-surface);
+        }
+
+        .category-items.active {
+            display: block;
         }
 
         .item {
             display: flex;
             align-items: center;
-            padding: 10px 15px;
-            background-color: white;
-            transition: background-color 0.3s ease;
-            border-bottom: 1px solid #f1f1f1;
+            padding: 15px;
+            border-bottom: 1px solid var(--color-border);
+            position: relative;
+            transition: background-color 0.2s;
         }
 
-        .item:last-child {
-            border-bottom: none;
-        }
-
-        .item-checkbox {
-            margin-right: 15px;
-        }
-
-        .item-label {
-            flex-grow: 1;
+        .item:active {
+            background-color: rgba(0,0,0,0.05);
         }
 
         .priority-indicator {
             width: 10px;
             height: 10px;
             border-radius: 50%;
-            margin-right: 10px;
+            margin-right: 15px;
         }
 
-        .priority-high {
-            background-color: var(--priority-high);
+        .priority-high { background-color: var(--color-high-priority); }
+        .priority-medium { background-color: var(--color-medium-priority); }
+        .priority-low { background-color: var(--color-low-priority); }
+
+        .item-details {
+            flex-grow: 1;
         }
 
-        .priority-medium {
-            background-color: var(--priority-medium);
-        }
-
-        .priority-low {
-            background-color: var(--priority-low);
+        .item-name {
+            font-size: 16px;
+            font-weight: 400;
         }
 
         .item-actions {
@@ -121,54 +156,74 @@
             align-items: center;
         }
 
-        .purchase-toggle {
+        .checkbox {
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--color-text-light);
+            border-radius: 4px;
+            margin-right: 10px;
             display: flex;
             align-items: center;
-            margin-left: 10px;
+            justify-content: center;
+            cursor: pointer;
         }
 
-        .custom-item-section {
+        .checkbox.checked {
+            background-color: var(--color-accent);
+            border-color: var(--color-accent);
+        }
+
+        .checkbox.checked::after {
+            content: '✓';
+            color: white;
+            font-size: 14px;
+        }
+
+        .add-item-section {
             padding: 15px;
-            background-color: var(--background-color);
+            background-color: var(--color-background);
+            position: sticky;
+            bottom: 0;
+            z-index: 100;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
         }
 
-        .custom-item-input {
+        .add-item-input {
             display: flex;
-            margin-top: 10px;
+            gap: 10px;
         }
 
         #custom-item-input {
             flex-grow: 1;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            margin-right: 10px;
+            padding: 10px;
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            font-size: 16px;
         }
 
         #add-custom-item {
-            padding: 8px 15px;
-            background-color: var(--accent-color);
+            padding: 10px 15px;
+            background-color: var(--color-accent);
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
+            font-weight: 600;
             cursor: pointer;
-            transition: background-color 0.3s ease;
         }
 
-        @media (max-width: 600px) {
-            .item {
-                flex-direction: column;
-                align-items: flex-start;
+        .empty-state {
+            text-align: center;
+            padding: 30px;
+            color: var(--color-text-light);
+        }
+
+        @media (max-width: 375px) {
+            .header h1 {
+                font-size: 16px;
             }
 
-            .item-actions {
-                width: 100%;
-                justify-content: space-between;
-                margin-top: 10px;
-            }
-
-            .purchase-toggle {
-                margin-left: 0;
+            .item-name {
+                font-size: 14px;
             }
         }
     </style>
@@ -176,16 +231,19 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>Monterosa Mountaineering Kit List</h1>
+            <h1>Monterosa Expedition Kit</h1>
+        </div>
+
+        <div class="search-container">
+            <input type="search" id="search-input" placeholder="Search gear items...">
         </div>
 
         <div id="kit-list-categories"></div>
 
-        <div class="custom-item-section">
-            <h2>Add Custom Item</h2>
-            <div class="custom-item-input">
-                <input type="text" id="custom-item-input" placeholder="Enter a new item">
-                <button id="add-custom-item" onclick="addCustomItem()">Add Item</button>
+        <div class="add-item-section">
+            <div class="add-item-input">
+                <input type="text" id="custom-item-input" placeholder="Add custom item">
+                <button id="add-custom-item">Add</button>
             </div>
         </div>
     </div>
@@ -193,189 +251,143 @@
     <script>
         const kitListCategories = [
             {
-                name: "Essential Clothing Layers",
+                name: "Essential Mountaineering Layers",
                 items: [
-                    { name: "Base Layer - Thermal Underwear (Top)", priority: "high" },
-                    { name: "Base Layer - Thermal Underwear (Bottom)", priority: "high" },
-                    { name: "Mid Layer - Fleece/Softshell", priority: "high" },
+                    { name: "Base Layer - Thermal Top", priority: "high" },
+                    { name: "Base Layer - Thermal Bottom", priority: "high" },
+                    { name: "Mid Layer - Fleece", priority: "high" },
                     { name: "Insulating Jacket (Down/Synthetic)", priority: "high" },
-                    { name: "Hardshell Waterproof Jacket (GORE-TEX)", priority: "high" },
-                    { name: "Hardshell Waterproof Pants", priority: "high" },
-                    { name: "Lightweight Insulating Vest", priority: "medium" }
+                    { name: "Hardshell Waterproof Jacket", priority: "high" },
+                    { name: "Hardshell Waterproof Pants", priority: "high" }
                 ]
             },
             {
-                name: "Technical Mountaineering Gear",
+                name: "Technical Alpine Gear",
                 items: [
                     { name: "Alpine Climbing Harness", priority: "high" },
                     { name: "Climbing Helmet", priority: "high" },
                     { name: "Ice Axe", priority: "high" },
                     { name: "Crampons (12-point steel)", priority: "high" },
-                    { name: "Locking Carabiners (x2)", priority: "high" },
-                    { name: "Mountaineering Backpack (30-40L)", priority: "high" },
-                    { name: "Collapsible Trekking Poles", priority: "medium" }
+                    { name: "Locking Carabiners", priority: "high" },
+                    { name: "Alpine Backpack (30-40L)", priority: "high" }
+                ]
+            },
+            {
+                name: "Safety & Emergency",
+                items: [
+                    { name: "First Aid Kit", priority: "high" },
+                    { name: "Emergency Shelter", priority: "high" },
+                    { name: "Headlamp with Spare Batteries", priority: "high" },
+                    { name: "Emergency Communication Device", priority: "high" },
+                    { name: "Avalanche Beacon", priority: "high" }
                 ]
             },
             {
                 name: "Personal Protection",
                 items: [
+                    { name: "Alpine Sunglasses", priority: "high" },
                     { name: "Warm Hat", priority: "high" },
-                    { name: "Sun Hat", priority: "medium" },
-                    { name: "Sunglasses (Cat. 4 with Side Covers)", priority: "high" },
-                    { name: "Ski Goggles", priority: "medium" },
-                    { name: "Thin Softshell Gloves", priority: "high" },
-                    { name: "Thick Warm Expedition Gloves", priority: "high" },
-                    { name: "Sunscreen SPF 50+", priority: "high" },
-                    { name: "Lip Balm SPF 30+", priority: "high" }
+                    { name: "Expedition Gloves", priority: "high" },
+                    { name: "Sunscreen SPF 50+", priority: "medium" },
+                    { name: "Lip Balm", priority: "medium" }
                 ]
             },
             {
-                name: "Footwear and Accessories",
+                name: "Climbing & Navigation",
                 items: [
-                    { name: "B2/B3 Mountaineering Boots", priority: "high" },
-                    { name: "Merino Wool Socks (Multiple Pairs)", priority: "high" },
-                    { name: "Trail/Hiking Shoes", priority: "low" },
-                    { name: "Gaiters", priority: "medium" }
-                ]
-            },
-            {
-                name: "Safety and Emergency Equipment",
-                items: [
-                    { name: "First Aid Kit", priority: "high" },
-                    { name: "Emergency Shelter/Bivy Bag", priority: "high" },
-                    { name: "Headlamp with Spare Batteries", priority: "high" },
-                    { name: "Emergency Communication Device", priority: "high" },
-                    { name: "Whistle", priority: "medium" },
-                    { name: "Multi-tool", priority: "medium" }
-                ]
-            },
-            {
-                name: "Additional Accessories",
-                items: [
-                    { name: "Water Bottles (x2)", priority: "high" },
-                    { name: "Hydration System", priority: "medium" },
-                    { name: "Energy Bars/Gels", priority: "high" },
-                    { name: "Compact Camera", priority: "low" },
-                    { name: "Mobile Phone", priority: "medium" },
-                    { name: "Sleeping Bag Liner", priority: "medium" }
+                    { name: "Climbing Rope", priority: "high" },
+                    { name: "GPS Device", priority: "high" },
+                    { name: "Topographic Maps", priority: "high" },
+                    { name: "Compass", priority: "high" }
                 ]
             }
         ];
 
-        function renderKitList() {
-            const kitListContainer = document.getElementById('kit-list-categories');
-            kitListContainer.innerHTML = '';
+        const categoryContainer = document.getElementById('kit-list-categories');
+        const searchInput = document.getElementById('search-input');
+        const customItemInput = document.getElementById('custom-item-input');
+        const addCustomItemButton = document.getElementById('add-custom-item');
 
-            kitListCategories.forEach(category => {
+        function renderCategories() {
+            categoryContainer.innerHTML = '';
+            kitListCategories.forEach((category, categoryIndex) => {
                 const categoryElement = document.createElement('div');
                 categoryElement.className = 'category';
-                
-                const categoryTitleElement = document.createElement('div');
-                categoryTitleElement.className = 'category-title';
-                
-                const titleTextElement = document.createElement('span');
-                titleTextElement.textContent = category.name;
-                
-                const toggleElement = document.createElement('span');
-                toggleElement.textContent = '▼';
-                toggleElement.className = 'category-toggle';
-                
-                categoryTitleElement.appendChild(titleTextElement);
-                categoryTitleElement.appendChild(toggleElement);
-                categoryElement.appendChild(categoryTitleElement);
 
-                const contentElement = document.createElement('div');
-                contentElement.className = 'category-content';
+                const categoryHeader = document.createElement('div');
+                categoryHeader.className = 'category-header';
+                categoryHeader.innerHTML = `
+                    <h2>${category.name}</h2>
+                    <span class="toggle">▼</span>
+                `;
 
-                category.items.forEach(item => {
-                    const itemElement = createItemElement(item);
-                    contentElement.appendChild(itemElement);
+                const categoryItems = document.createElement('div');
+                categoryItems.className = 'category-items';
+
+                category.items.forEach((item, itemIndex) => {
+                    const itemElement = document.createElement('div');
+                    itemElement.className = 'item';
+                    itemElement.innerHTML = `
+                        <div class="priority-indicator priority-${item.priority}"></div>
+                        <div class="checkbox" data-category="${categoryIndex}" data-item="${itemIndex}"></div>
+                        <div class="item-details">
+                            <div class="item-name">${item.name}</div>
+                        </div>
+                    `;
+                    categoryItems.appendChild(itemElement);
                 });
 
-                categoryElement.appendChild(contentElement);
-                kitListContainer.appendChild(categoryElement);
-
-                // Toggle functionality
-                categoryTitleElement.addEventListener('click', () => {
-                    contentElement.classList.toggle('collapsed');
-                    toggleElement.textContent = contentElement.classList.contains('collapsed') ? '▶' : '▼';
+                categoryHeader.addEventListener('click', () => {
+                    categoryItems.classList.toggle('active');
+                    const toggle = categoryHeader.querySelector('.toggle');
+                    toggle.textContent = categoryItems.classList.contains('active') ? '▲' : '▼';
                 });
+
+                categoryElement.appendChild(categoryHeader);
+                categoryElement.appendChild(categoryItems);
+                categoryContainer.appendChild(categoryElement);
+            });
+
+            setupEventListeners();
+        }
+
+        function setupEventListeners() {
+            // Checkbox interaction
+            document.querySelectorAll('.checkbox').forEach(checkbox => {
+                checkbox.addEventListener('click', (e) => {
+                    checkbox.classList.toggle('checked');
+                });
+            });
+
+            // Search functionality
+            searchInput.addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                document.querySelectorAll('.item').forEach(item => {
+                    const itemName = item.querySelector('.item-name').textContent.toLowerCase();
+                    item.style.display = itemName.includes(searchTerm) ? 'flex' : 'none';
+                });
+            });
+
+            // Add custom item
+            addCustomItemButton.addEventListener('click', () => {
+                const itemName = customItemInput.value.trim();
+                if (itemName) {
+                    // Find or create custom category
+                    let customCategory = kitListCategories.find(cat => cat.name === 'Custom Items');
+                    if (!customCategory) {
+                        customCategory = { name: 'Custom Items', items: [] };
+                        kitListCategories.push(customCategory);
+                    }
+
+                    customCategory.items.push({ name: itemName, priority: 'low' });
+                    renderCategories();
+                    customItemInput.value = '';
+                }
             });
         }
 
-        function createItemElement(itemData) {
-            const itemElement = document.createElement('div');
-            itemElement.className = 'item';
-
-            const checkboxId = itemData.name.toLowerCase().replace(/\s+/g, '-');
-
-            const priorityClass = `priority-${itemData.priority}`;
-            const priorityIndicator = `<div class="priority-indicator ${priorityClass}"></div>`;
-
-            itemElement.innerHTML = `
-                ${priorityIndicator}
-                <input type="checkbox" id="${checkboxId}" class="item-checkbox">
-                <label for="${checkboxId}" class="item-label">${itemData.name}</label>
-                <div class="item-actions">
-                    <div class="purchase-toggle">
-                        <input type="checkbox" id="${checkboxId}-purchase" class="purchase-check">
-                        <label for="${checkboxId}-purchase">Need to Buy</label>
-                    </div>
-                </div>
-            `;
-
-            return itemElement;
-        }
-
-        function addCustomItem() {
-            const customItemInput = document.getElementById('custom-item-input');
-            const itemName = customItemInput.value.trim();
-            
-            if (itemName) {
-                const kitListContainer = document.getElementById('kit-list-categories');
-                const customCategory = kitListContainer.querySelector('.category:last-child');
-                
-                if (!customCategory || customCategory.querySelector('.category-title span').textContent !== 'Custom Items') {
-                    const newCustomCategory = document.createElement('div');
-                    newCustomCategory.className = 'category';
-                    
-                    const categoryTitleElement = document.createElement('div');
-                    categoryTitleElement.className = 'category-title';
-                    
-                    const titleTextElement = document.createElement('span');
-                    titleTextElement.textContent = 'Custom Items';
-                    
-                    const toggleElement = document.createElement('span');
-                    toggleElement.textContent = '▼';
-                    toggleElement.className = 'category-toggle';
-                    
-                    categoryTitleElement.appendChild(titleTextElement);
-                    categoryTitleElement.appendChild(toggleElement);
-                    newCustomCategory.appendChild(categoryTitleElement);
-                    
-                    const contentElement = document.createElement('div');
-                    contentElement.className = 'category-content';
-                    newCustomCategory.appendChild(contentElement);
-                    
-                    kitListContainer.appendChild(newCustomCategory);
-
-                    // Toggle functionality for custom category
-                    categoryTitleElement.addEventListener('click', () => {
-                        contentElement.classList.toggle('collapsed');
-                        toggleElement.textContent = contentElement.classList.contains('collapsed') ? '▶' : '▼';
-                    });
-                }
-
-                const customItemData = { name: itemName, priority: "low" };
-                const itemElement = createItemElement(customItemData);
-                kitListContainer.lastChild.querySelector('.category-content').appendChild(itemElement);
-                
-                customItemInput.value = '';
-            }
-        }
-
         // Initial render
-        renderKitList();
+        renderCategories();
     </script>
 </body>
 </html>
