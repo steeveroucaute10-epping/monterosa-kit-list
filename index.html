@@ -1,35 +1,299 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Monte Rosa Kit List</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Monte Rosa Expedition Kit</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-background: #f4f6f9;
+            --color-surface: #ffffff;
+            --color-primary: #2c3e50;
+            --color-secondary: #34495e;
+            --color-accent: #3498db;
+            --color-text: #2c3e50;
+            --color-text-light: #7f8c8d;
+            --color-border: #ecf0f1;
+            --color-essential: #2ecc71;
+            --color-optional: #f39c12;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.6;
+            overscroll-behavior-y: none;
+            touch-action: manipulation;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: var(--color-surface);
+            min-height: 100vh;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            background-color: var(--color-primary);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header h1 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .search-container {
+            padding: 10px;
+            background-color: var(--color-surface);
+            position: sticky;
+            top: 50px;
+            z-index: 99;
+        }
+
+        #search-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .category {
+            margin-bottom: 5px;
+        }
+
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background-color: var(--color-background);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .category-header h2 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--color-secondary);
+        }
+
+        .category-header .toggle {
+            font-size: 20px;
+            color: var(--color-text-light);
+        }
+
+        .category-items {
+            display: none;
+        }
+
+        .category-items.active {
+            display: block;
+        }
+
+        .item {
+            display: grid;
+            grid-template-columns: 1fr 40px 40px;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid var(--color-border);
+            gap: 15px;
+        }
+
+        .item-name {
+            font-size: 16px;
+            font-weight: 400;
+        }
+
+        .checkbox, .purchase-checkbox {
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--color-text-light);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            justify-self: center;
+            position: relative;
+        }
+
+        .checkbox-label, .purchase-checkbox-label {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--color-secondary);
+            color: white;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-size: 10px;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+
+        .checkbox:hover .checkbox-label, 
+        .purchase-checkbox:hover .purchase-checkbox-label {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .checkbox.checked, .purchase-checkbox.checked {
+            background-color: var(--color-accent);
+            border-color: var(--color-accent);
+        }
+
+        .checkbox.checked::after, .purchase-checkbox.checked::after {
+            content: '✓';
+            color: white;
+            font-size: 14px;
+        }
+
+        @media (max-width: 375px) {
+            .item-name {
+                font-size: 14px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>Monte Rosa Expedition Kit List</h1>
-    
-    <div id="content">
-        <h2>Key Clothing - Tops</h2>
-        <ul>
-            <li>Hard-shell waterproof shell jacket (GORE‑TEX)</li>
-            <li>Down or synthetic warm jacket</li>
-            <li>Mid layers (fleece or similar)</li>
-            <li>Base layer tops (long sleeve) x2</li>
-            <li>Base layer tops (short sleeve) x2</li>
-            <li>Cotton T-shirts</li>
-        </ul>
+    <div class="container">
+        <div class="header">
+            <h1>Monte Rosa Expedition Kit</h1>
+        </div>
 
-        <h2>Key Clothing - Bottoms</h2>
-        <ul>
-            <li>Hard-shell waterproof shell pants (GORE‑TEX)</li>
-            <li>Soft-shell mountaineering / trekking pants</li>
-            <li>Base layer leggings</li>
-            <li>Shorts</li>
-            <li>Underwear</li>
-        </ul>
+        <div class="search-container">
+            <input type="search" id="search-input" placeholder="Search gear items...">
+        </div>
+
+        <div id="kit-list-categories"></div>
     </div>
 
     <script>
-        console.log('Page loaded successfully');
+        const kitListCategories = [
+            {
+                name: "Key Clothing - Tops",
+                items: [
+                    "Hard-shell waterproof shell jacket (GORE‑TEX)",
+                    "Down or synthetic warm jacket",
+                    "Mid layers (fleece or similar)",
+                    "Base layer tops (long sleeve) x2",
+                    "Base layer tops (short sleeve) x2",
+                    "Cotton T-shirts"
+                ]
+            },
+            {
+                name: "Key Clothing - Bottoms",
+                items: [
+                    "Hard-shell waterproof shell pants (GORE‑TEX)",
+                    "Soft-shell mountaineering / trekking pants",
+                    "Base layer leggings",
+                    "Shorts",
+                    "Underwear"
+                ]
+            },
+            {
+                name: "Footwear",
+                items: [
+                    "B2 or B3 graded mountaineering boots",
+                    "Warm socks (Merino wool)",
+                    "Trail shoes / hiking shoes"
+                ]
+            }
+        ];
+
+        const categoryContainer = document.getElementById('kit-list-categories');
+        const searchInput = document.getElementById('search-input');
+
+        function renderCategories() {
+            try {
+                categoryContainer.innerHTML = '';
+                kitListCategories.forEach((category, categoryIndex) => {
+                    const categoryElement = document.createElement('div');
+                    categoryElement.className = 'category';
+
+                    const categoryHeader = document.createElement('div');
+                    categoryHeader.className = 'category-header';
+                    categoryHeader.innerHTML = `
+                        <h2>${category.name}</h2>
+                        <span class="toggle">▼</span>
+                    `;
+
+                    const categoryItems = document.createElement('div');
+                    categoryItems.className = 'category-items';
+
+                    category.items.forEach((item, itemIndex) => {
+                        const itemElement = document.createElement('div');
+                        itemElement.className = 'item';
+                        itemElement.innerHTML = `
+                            <div class="item-name">${item}</div>
+                            <div class="checkbox" data-category="${categoryIndex}" data-item="${itemIndex}">
+                                <span class="checkbox-label">Packed</span>
+                            </div>
+                            <div class="purchase-checkbox" data-category="${categoryIndex}" data-item="${itemIndex}">
+                                <span class="purchase-checkbox-label">To Buy</span>
+                            </div>
+                        `;
+                        categoryItems.appendChild(itemElement);
+                    });
+
+                    categoryHeader.addEventListener('click', () => {
+                        categoryItems.classList.toggle('active');
+                        const toggle = categoryHeader.querySelector('.toggle');
+                        toggle.textContent = categoryItems.classList.contains('active') ? '▲' : '▼';
+                    });
+
+                    categoryElement.appendChild(categoryHeader);
+                    categoryElement.appendChild(categoryItems);
+                    categoryContainer.appendChild(categoryElement);
+                });
+
+                setupEventListeners();
+            } catch (renderError) {
+                console.error('Render error:', renderError);
+            }
+        }
+
+        function setupEventListeners() {
+            try {
+                document.querySelectorAll('.checkbox, .purchase-checkbox').forEach(checkbox => {
+                    checkbox.addEventListener('click', (e) => {
+                        checkbox.classList.toggle('checked');
+                    });
+                });
+
+                searchInput.addEventListener('input', (e) => {
+                    const searchTerm = e.target.value.toLowerCase();
+                    document.querySelectorAll('.item').forEach(item => {
+                        const itemName = item.querySelector('.item-name').textContent.toLowerCase();
+                        item.style.display = itemName.includes(searchTerm) ? 'grid' : 'none';
+                    });
+                });
+            } catch (listenerError) {
+                console.error('Event listener error:', listenerError);
+            }
+        }
+
+        // Initial render
+        renderCategories();
     </script>
 </body>
 </html>
