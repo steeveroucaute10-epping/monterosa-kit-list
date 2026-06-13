@@ -7,10 +7,59 @@
         body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
         h1, h2 { color: #333; }
         .category { margin-bottom: 20px; }
-        .item { display: flex; align-items: center; margin: 5px 0; }
-        .item input { margin-right: 10px; }
+        .item { 
+            display: flex; 
+            align-items: center; 
+            margin: 5px 0; 
+            padding: 10px; 
+            border-bottom: 1px solid #eee;
+        }
+        .item input[type="checkbox"] { margin-right: 10px; }
         .item label { flex-grow: 1; }
         .rental { color: #666; font-style: italic; }
+        .purchase-toggle { 
+            margin-left: 10px; 
+            display: flex; 
+            align-items: center;
+        }
+        .purchase-toggle label { margin-left: 5px; }
+        #recommendationsModal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+        }
+        .close-modal {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .recommendation {
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+        .recommendation a {
+            display: block;
+            margin-top: 10px;
+            color: blue;
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
@@ -21,83 +70,74 @@
         <div class="item">
             <input type="checkbox" id="hardshell-jacket">
             <label for="hardshell-jacket">Hardshell Waterproof Jacket (GORE-TEX)</label>
+            <div class="purchase-toggle">
+                <input type="checkbox" id="hardshell-jacket-purchase" class="purchase-check">
+                <label for="hardshell-jacket-purchase">Need to Buy</label>
+            </div>
         </div>
         <div class="item">
             <input type="checkbox" id="down-jacket">
             <label for="down-jacket">Down/Synthetic Warm Jacket</label>
-        </div>
-        <div class="item">
-            <input type="checkbox" id="mid-layer">
-            <label for="mid-layer">Mid Layer (Fleece/Softshell)</label>
-        </div>
-        <div class="item">
-            <input type="checkbox" id="base-long-sleeve">
-            <label for="base-long-sleeve">Base Layer - Long Sleeve (x2)</label>
-        </div>
-        <div class="item">
-            <input type="checkbox" id="base-short-sleeve">
-            <label for="base-short-sleeve">Base Layer - Short Sleeve (x2)</label>
+            <div class="purchase-toggle">
+                <input type="checkbox" id="down-jacket-purchase" class="purchase-check">
+                <label for="down-jacket-purchase">Need to Buy</label>
+            </div>
         </div>
     </div>
 
-    <div class="category">
-        <h2>Bottoms</h2>
-        <div class="item">
-            <input type="checkbox" id="makalu-pants" checked>
-            <label for="makalu-pants">Mountain Equipment Makalu Hardshell Pants</label>
-        </div>
-        <div class="item">
-            <input type="checkbox" id="softshell-pants">
-            <label for="softshell-pants">Soft-shell Mountaineering Pants</label>
-        </div>
-        <div class="item">
-            <input type="checkbox" id="base-leggings">
-            <label for="base-leggings">Base Layer Leggings</label>
-        </div>
-    </div>
-
-    <div class="category">
-        <h2>Technical Climbing Equipment</h2>
-        <div class="item">
-            <input type="checkbox" id="backpack">
-            <label for="backpack">Backpack 30-40L (Osprey Mutant 38L) <span class="rental">(Optional)</span></label>
-        </div>
-        <div class="item">
-            <input type="checkbox" id="ice-axe">
-            <label for="ice-axe">Ice Axe (Black Diamond 'Raven') <span class="rental">(Can be rented)</span></label>
-        </div>
-        <div class="item">
-            <input type="checkbox" id="crampons">
-            <label for="crampons">Crampons (12-point steel, Black Diamond 'Serac') <span class="rental">(Can be rented)</span></label>
-        </div>
-        <div class="item">
-            <input type="checkbox" id="climbing-helmet">
-            <label for="climbing-helmet">Climbing Helmet (Black Diamond 'Vision') <span class="rental">(Can be rented)</span></label>
-        </div>
-        <div class="item">
-            <input type="checkbox" id="climbing-harness">
-            <label for="climbing-harness">Climbing Harness (Black Diamond 'Couloir') <span class="rental">(Can be rented)</span></label>
-        </div>
-        <div class="item">
-            <input type="checkbox" id="trekking-poles">
-            <label for="trekking-poles">Trekking Poles (Adjustable) <span class="rental">(Can be rented)</span></label>
+    <div id="recommendationsModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Purchase Recommendations</h2>
+            <div id="recommendationsList"></div>
         </div>
     </div>
 
     <script>
-        // Optional: Add persistence to checkboxes
         document.addEventListener('DOMContentLoaded', () => {
-            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-            checkboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', () => {
-                    localStorage.setItem(checkbox.id, checkbox.checked);
+            const purchaseChecks = document.querySelectorAll('.purchase-check');
+            const modal = document.getElementById('recommendationsModal');
+            const closeModal = document.querySelector('.close-modal');
+            const recommendationsList = document.getElementById('recommendationsList');
+
+            purchaseChecks.forEach(checkbox => {
+                checkbox.addEventListener('change', async (e) => {
+                    if (e.target.checked) {
+                        const itemName = e.target.id.replace('-purchase', '');
+                        const itemLabel = document.querySelector(`label[for="${itemName}"]`).textContent;
+                        
+                        // Clear previous recommendations
+                        recommendationsList.innerHTML = 'Loading recommendations...';
+                        modal.style.display = 'block';
+
+                        try {
+                            const response = await fetch(`/search?query=${encodeURIComponent(itemLabel)}`);
+                            const recommendations = await response.json();
+
+                            recommendationsList.innerHTML = recommendations.map(rec => `
+                                <div class="recommendation">
+                                    <h3>${rec.title}</h3>
+                                    <p>${rec.description}</p>
+                                    <p>Price: ${rec.price}</p>
+                                    <a href="${rec.link}" target="_blank">View Product</a>
+                                </div>
+                            `).join('');
+                        } catch (error) {
+                            recommendationsList.innerHTML = 'Error loading recommendations.';
+                        }
+                    }
                 });
-                
-                const savedState = localStorage.getItem(checkbox.id);
-                if (savedState !== null) {
-                    checkbox.checked = JSON.parse(savedState);
-                }
             });
+
+            closeModal.onclick = () => {
+                modal.style.display = 'none';
+            };
+
+            window.onclick = (event) => {
+                if (event.target == modal) {
+                    modal.style.display = 'none';
+                }
+            };
         });
     </script>
 </body>
